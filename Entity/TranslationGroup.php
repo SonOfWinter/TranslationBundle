@@ -19,9 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Group of translatable's translations for one lang
  *
  * @package SOW\TranslationBundle\Entity
- *
- * @ORM\Table(name="`translation`")
- * @ORM\Entity(repositoryClass="SOW\TranslationBundle\Repository\TranslationRepository")
  */
 class TranslationGroup
 {
