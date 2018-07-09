@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Translation repository
+ * Translation Repository
  *
  * PHP Version 7.1
  *
  * @package  SOW\TranslationBundle\Repository
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
+ * @author   Openium <contact@openium.fr>
+ * @license  Openium All right reserved
+ * @link     https://www.openium.fr/
  */
 
 namespace SOW\TranslationBundle\Repository;
@@ -41,7 +42,7 @@ class TranslationRepository extends ServiceEntityRepository implements Translati
      * find all by object and langs
      *
      * @param Translatable $translatable
-     * @param array        $langs
+     * @param array $langs
      *
      * @return void
      */
@@ -65,8 +66,8 @@ class TranslationRepository extends ServiceEntityRepository implements Translati
             ->setParameters(
                 [
                     "entityName" => $translatable->getEntityName(),
-                    "entityId"   => $translatable->getId(),
-                    "langs"      => $langs
+                    "entityId" => $translatable->getId(),
+                    "langs" => $langs
                 ]
             )->getQuery()->getResult();
     }

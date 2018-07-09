@@ -31,7 +31,7 @@ class SOWTranslationExtension extends Extension
     /**
      * Loads a specific configuration.
      *
-     * @param array            $configs
+     * @param array $configs
      * @param ContainerBuilder $container
      *
      * @throws InvalidArgumentException When provided tag is not defined in this extension

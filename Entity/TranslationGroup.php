@@ -5,14 +5,12 @@
  *
  * PHP Version 7.1
  *
- * @package  SOW\TranslationBundle\Loader
+ * @package  SOW\TranslationBundle\Entity
  * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
  * @link     https://github.com/SonOfWinter/TranslationBundle
  */
 
 namespace SOW\TranslationBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class TranslationGroup
@@ -45,7 +43,6 @@ class TranslationGroup
      *
      * @param Translatable $translatable
      * @param string $lang
-     *
      */
     public function __construct(Translatable $translatable, string $lang)
     {

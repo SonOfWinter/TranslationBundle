@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Translation Repository Interface
+ *
+ * PHP Version 7.1
+ *
+ * @package  SOW\TranslationBundle\Repository
+ * @author   Openium <contact@openium.fr>
+ * @license  Openium All right reserved
+ * @link     https://www.openium.fr/
+ */
+
 namespace SOW\TranslationBundle\Repository;
 
 use SOW\TranslationBundle\Entity\Translatable;

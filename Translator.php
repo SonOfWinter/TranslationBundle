@@ -29,7 +29,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class Translator implements TranslatorInterface
 {
-    
     /**
      * @var LoggerInterface|null
      */
@@ -103,7 +102,7 @@ class Translator implements TranslatorInterface
     }
 
     /**
-     * TODO description
+     * Get all translation in TranslationGroup for lang
      *
      * @param Translatable $translatable
      * @param string $lang
@@ -130,6 +129,7 @@ class Translator implements TranslatorInterface
      * @param string $lang
      * @param string $key
      * @param string $value
+     * @param bool $flush
      *
      * @return Translation
      */
@@ -137,10 +137,11 @@ class Translator implements TranslatorInterface
         Translatable $translatable,
         string $lang,
         string $key,
-        string $value
+        string $value,
+        bool $flush = false
     ): Translation {
         /** @var Translation $translation */
-        return $this->translationService->edit($translatable, $lang, $key, $value);
+        return $this->translationService->edit($translatable, $lang, $key, $value, $flush);
     }
 
     /**
@@ -149,15 +150,16 @@ class Translator implements TranslatorInterface
      * @param Translatable $translatable
      * @param string $lang
      * @param array $values
+     * @param bool $flush
      *
      * @throws TranslatorConfigurationException
-     *
      * @return TranslationGroup
      */
     public function setTranslationForLangAndValues(
         Translatable $translatable,
         string $lang,
-        array $values
+        array $values,
+        bool $flush = false
     ): TranslationGroup {
         $translationGroup = new TranslationGroup($translatable, $lang);
         $collection = $this->getTranslationCollection();
@@ -168,7 +170,8 @@ class Translator implements TranslatorInterface
                         $translatable,
                         $lang,
                         $t->getKey(),
-                        $values[$t->getKey()]
+                        $values[$t->getKey()],
+                        $flush
                     )
                 );
             }

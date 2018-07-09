@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Tranlator Interface
+ * Translator Interface
  *
  * PHP Version 7.1
  *
@@ -36,13 +36,15 @@ interface TranslatorInterface
         Translatable $translatable,
         string $lang,
         string $key,
-        string $value
+        string $value,
+        bool $flush
     ): Translation;
 
     public function setTranslationForLangAndValues(
         Translatable $translatable,
         string $lang,
-        array $values
+        array $values,
+        bool $flush
     ): TranslationGroup;
 
     public function translate(Translatable $translatable, string $lang): Translatable;
