@@ -39,7 +39,7 @@ class TranslationService implements TranslationServiceInterface
      * TranslationService constructor.
      *
      * @param EntityManagerInterface $em
-     * @param string                 $translationClass
+     * @param string $translationClass
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -53,7 +53,7 @@ class TranslationService implements TranslationServiceInterface
      * Find all translation for a trnaslatable and a lang
      *
      * @param Translatable $translatable
-     * @param string       $lang
+     * @param string $lang
      *
      * @throws \UnexpectedValueException
      *
@@ -66,8 +66,8 @@ class TranslationService implements TranslationServiceInterface
         return $this->repository->findBy(
             [
                 "entityName" => $translatable->getEntityName(),
-                "entityId"   => $translatable->getId(),
-                "lang"       => $lang
+                "entityId" => $translatable->getId(),
+                "lang" => $lang
             ]
         );
     }
@@ -76,8 +76,8 @@ class TranslationService implements TranslationServiceInterface
      * Find one translation for a key
      *
      * @param Translatable $translatable
-     * @param string       $key
-     * @param string       $lang
+     * @param string $key
+     * @param string $lang
      *
      * @return Translation|null
      */
@@ -89,9 +89,9 @@ class TranslationService implements TranslationServiceInterface
         return $this->repository->findOneBy(
             [
                 "entityName" => $translatable->getEntityName(),
-                "entityId"   => $translatable->getId(),
-                "lang"       => $lang,
-                "key"        => $key
+                "entityId" => $translatable->getId(),
+                "lang" => $lang,
+                "key" => $key
             ]
         );
     }
@@ -110,7 +110,7 @@ class TranslationService implements TranslationServiceInterface
         return $this->repository->findBy(
             [
                 "entityName" => $translatable->getEntityName(),
-                "entityId"   => $translatable->getId()
+                "entityId" => $translatable->getId()
             ],
             ["lang"]
         );

@@ -66,7 +66,7 @@ class AnnotationClassLoader implements LoaderInterface
     }
 
     /**
-     * TODO description
+     * Load annotations from class
      *
      * @param mixed $class
      * @param null $type
@@ -155,7 +155,7 @@ class AnnotationClassLoader implements LoaderInterface
      * Check if resource is supported
      *
      * @param mixed $resource
-     * @param null  $type
+     * @param null $type
      *
      * @return bool
      */
