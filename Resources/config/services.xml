@@ -10,13 +10,17 @@
     </parameters>
 
     <services>
+        <service id="sow_translation.translation_repository" class="SOW\TranslationBundle\Repository\TranslationRepository" public="false">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument key="$translationClass">%sow_translation.translation_class_name%</argument>
+        </service>
         <service id="sow_translation.annotation_class_loader" class="SOW\TranslationBundle\Loader\AnnotationClassLoader" public="false">
             <argument type="service" id="annotation_reader" />
             <argument key="$translationAnnotationClass">%sow_translation.annotation_class_name%</argument>
         </service>
         <service id="sow_translation.translation_service" class="SOW\TranslationBundle\Service\TranslationService" public="true">
             <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument key="$translationClass">%sow_translation.translation_class_name%</argument>
+            <argument type="service" id="sow_translation.translation_repository" />
         </service>
         <service id="sow_translation.translator" class="SOW\TranslationBundle\Translator" public="true">
             <argument type="service" id="sow_translation.translation_service" />

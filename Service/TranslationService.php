@@ -6,9 +6,8 @@
  * PHP Version 7.1
  *
  * @package  SOW\TranslationBundle\Service
- * @author   Openium <contact@openium.fr>
- * @license  Openium All right reserved
- * @link     https://www.openium.fr/
+ * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
+ * @link     https://github.com/SonOfWinter/TranslationBundle
  */
 
 namespace SOW\TranslationBundle\Service;
@@ -39,14 +38,14 @@ class TranslationService implements TranslationServiceInterface
      * TranslationService constructor.
      *
      * @param EntityManagerInterface $em
-     * @param string $translationClass
+     * @param TranslationRepositoryInterface $repository
      */
     public function __construct(
         EntityManagerInterface $em,
-        string $translationClass
+        TranslationRepositoryInterface $repository
     ) {
         $this->em = $em;
-        $this->repository = $em->getRepository($translationClass);
+        $this->repository = $repository;
     }
 
     /**
@@ -112,12 +111,13 @@ class TranslationService implements TranslationServiceInterface
                 "entityName" => $translatable->getEntityName(),
                 "entityId" => $translatable->getId()
             ],
-            ["lang"]
+            ["lang" => "ASC"]
         );
     }
 
     /**
      * create translation
+     * Auto persist new translation
      *
      * @param Translatable $translatable
      * @param string $lang
@@ -140,8 +140,8 @@ class TranslationService implements TranslationServiceInterface
             ->setKey($key)
             ->setLang($lang)
             ->setValue($value);
+        $this->em->persist($translation);
         if ($flush) {
-            $this->em->persist($translation);
             $this->em->flush();
         }
         return $translation;
