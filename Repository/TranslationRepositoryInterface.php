@@ -5,10 +5,9 @@
  *
  * PHP Version 7.1
  *
- * @package  SOW\TranslationBundle\Repository
- * @author   Openium <contact@openium.fr>
- * @license  Openium All right reserved
- * @link     https://www.openium.fr/
+ * @package  SOW\TranslationBundle\Annotation
+ * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
+ * @link     https://github.com/SonOfWinter/TranslationBundle
  */
 
 namespace SOW\TranslationBundle\Repository;
@@ -26,4 +25,8 @@ interface TranslationRepositoryInterface
         Translatable $translatable,
         array $langs
     );
+
+    public function findBy(array $data, array $orderBy = []);
+
+    public function findOneBy(array $data);
 }

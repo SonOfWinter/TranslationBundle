@@ -6,9 +6,8 @@
  * PHP Version 7.1
  *
  * @package  SOW\TranslationBundle
- * @author   Openium <contact@openium.fr>
- * @license  Openium All right reserved
- * @link     https://www.openium.fr/
+ * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
+ * @link     https://github.com/SonOfWinter/TranslationBundle
  */
 
 namespace SOW\TranslationBundle;
