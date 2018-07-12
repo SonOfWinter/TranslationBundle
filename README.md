@@ -60,4 +60,3 @@ Use Translator service for translate entity
         ...
     }
 ```
-
