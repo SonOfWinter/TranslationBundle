@@ -60,3 +60,42 @@ Use Translator service for translate entity
         ...
     }
 ```
+
+## Next
+
+> multilang setter/getter
+
+just lang
+
+~~~json
+    [
+        "fr": [ #or object
+            "prop1": "...",
+            "prop2": "..."
+        ],
+        "en": [
+            "prop1": "...",
+            "prop2": "..."
+        ]
+    ]
+~~~
+
+or in object
+
+~~~json
+    {
+        "id": 1,
+        "prop0": "...",
+        "fr": [ #or object
+            "prop1": "...",
+            "prop2": "..."
+        ],
+        "en": [
+            "prop1": "...",
+            "prop2": "..."
+        ],
+        "prop3": "..."
+    }
+~~~
+
+with default language and list of available languages (parameter)
