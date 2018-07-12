@@ -49,7 +49,6 @@ class TranslationRepository implements TranslationRepositoryInterface
      *
      * @param array $data
      *
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      *
      * @return mixed
@@ -64,14 +63,12 @@ class TranslationRepository implements TranslationRepositoryInterface
             );
         $parameterCount = 0;
         foreach ($data as $key => $value) {
-            $dataKey = "key{$parameterCount}";
             $dataValue = "value{$parameterCount}";
-            $qb->andWhere("t.:{$dataKey} = :{$dataValue}");
-            $qb->setParameter($dataKey, $key);
+            $qb->andWhere($qb->expr()->eq("t.{$key}", ":{$dataValue}"));
             $qb->setParameter($dataValue, $value);
             $parameterCount ++;
         }
-        return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -92,10 +89,8 @@ class TranslationRepository implements TranslationRepositoryInterface
             );
         $parameterCount = 0;
         foreach ($data as $key => $value) {
-            $dataKey = "key{$parameterCount}";
             $dataValue = "value{$parameterCount}";
-            $qb->andWhere("t.:{$dataKey} = :{$dataValue}");
-            $qb->setParameter($dataKey, $key);
+            $qb->andWhere($qb->expr()->eq("t.{$key}", ":{$dataValue}"));
             $qb->setParameter($dataValue, $value);
             $parameterCount ++;
         }

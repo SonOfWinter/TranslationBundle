@@ -14,6 +14,7 @@ namespace SOW\TranslationBundle\Tests\Service;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use SOW\TranslationBundle\Entity\Translation;
 use SOW\TranslationBundle\Repository\TranslationRepository;
@@ -48,13 +49,19 @@ class TranslationRepositoryTest extends WebTestCase
             ->getMock();
     }
 
-    public function testFindAllForObjectWithLang()
+    public function testFindOneBy()
     {
+        $comparison = $this->getMockBuilder(Expr\Comparison::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $queryExpr = $this->getMockBuilder(Expr::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $query = $this->getMockBuilder(AbstractQuery::class)
             ->disableOriginalConstructor()
             ->getMock();
         $query->expects($this->once())
-            ->method('getSingleResult')
+            ->method('getOneOrNullResult')
             ->will($this->returnValue($this->translation));
         $queryBuilder = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
@@ -68,12 +75,18 @@ class TranslationRepositoryTest extends WebTestCase
         $queryBuilder->expects($this->exactly(2))
             ->method('andWhere')
             ->will($this->returnValue($queryBuilder));
-        $queryBuilder->expects($this->exactly(4))
+        $queryBuilder->expects($this->exactly(2))
             ->method('setParameter')
             ->will($this->returnValue($queryBuilder));
         $queryBuilder->expects($this->once())
             ->method('getQuery')
             ->will($this->returnValue($query));
+        $queryExpr->expects($this->exactly(2))
+            ->method('eq')
+            ->will($this->returnValue($comparison));
+        $queryBuilder->expects($this->exactly(2))
+            ->method('expr')
+            ->will($this->returnValue($queryExpr));
         $this->em->expects($this->once())
             ->method('createQueryBuilder')
             ->will($this->returnValue($queryBuilder));
