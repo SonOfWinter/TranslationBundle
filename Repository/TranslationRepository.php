@@ -66,7 +66,7 @@ class TranslationRepository implements TranslationRepositoryInterface
             $dataValue = "value{$parameterCount}";
             $qb->andWhere($qb->expr()->eq("t.{$key}", ":{$dataValue}"));
             $qb->setParameter($dataValue, $value);
-            $parameterCount ++;
+            $parameterCount++;
         }
         return $qb->getQuery()->getOneOrNullResult();
     }
@@ -92,7 +92,7 @@ class TranslationRepository implements TranslationRepositoryInterface
             $dataValue = "value{$parameterCount}";
             $qb->andWhere($qb->expr()->eq("t.{$key}", ":{$dataValue}"));
             $qb->setParameter($dataValue, $value);
-            $parameterCount ++;
+            $parameterCount++;
         }
         foreach ($orderBy as $property => $order) {
             $qb->orderBy($property, $order);
@@ -106,31 +106,28 @@ class TranslationRepository implements TranslationRepositoryInterface
      * @param Translatable $translatable
      * @param array $langs
      *
-     * @return void
+     * @return mixed
      */
     public function findAllByObjectAndLangs(
         Translatable $translatable,
         array $langs
     ) {
         $qb = $this->em->createQueryBuilder();
-        $qb->select('t')
-            ->from(
-                $this->translationClass,
-                't'
-            )
-            ->where('t.entityName : :entityName')
-            ->andWhere('t.entityId : :entityId')
-            ->andWhere('t.lang IN (:langs)')
-            ->orderBy(
-                't.key',
-                'ASC'
-            )
+        $qb->select('t');
+        $qb->from(
+            $this->translationClass,
+            't'
+        )->where('t.entityName : :entityName')->andWhere('t.entityId : :entityId')->andWhere('t.lang IN (:langs)')->orderBy(
+            't.key',
+            'ASC'
+        )
             ->setParameters(
                 [
                     "entityName" => $translatable->getEntityName(),
                     "entityId" => $translatable->getId(),
                     "langs" => $langs
                 ]
-            )->getQuery()->getResult();
+            );
+        return $qb->getQuery()->getResult();
     }
 }
