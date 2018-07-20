@@ -14,7 +14,7 @@ namespace SOW\TranslationBundle;
 
 use SOW\TranslationBundle\Entity\Translatable;
 use SOW\TranslationBundle\Entity\TranslationGroup;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
 
 /**
  * Interface TranslatorInterface
@@ -38,7 +38,7 @@ interface TranslatorInterface
         string $key,
         string $value,
         bool $flush
-    ): Translation;
+    ): AbstractTranslation;
 
     public function setTranslationForLangAndValues(
         Translatable $translatable,

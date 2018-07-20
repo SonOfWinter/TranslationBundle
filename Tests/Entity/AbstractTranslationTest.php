@@ -13,16 +13,15 @@
 namespace SOW\TranslationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
-use SOW\TranslationBundle\Entity\Translation;
-use SOW\TranslationBundle\Entity\TranslationGroup;
-use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
+use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
 
 /**
  * Class TranslationTest
  *
  * @package SOW\TranslationBundle\Tests\Entity
  */
-class TranslationTest extends TestCase
+class AbstractTranslationTest extends TestCase
 {
     public function testSetterAndGetterTranslation()
     {
@@ -33,7 +32,7 @@ class TranslationTest extends TestCase
             ->setEntityName('someEntity')
             ->setLang('fr');
 
-        $this->assertTrue($translation instanceof Translation);
+        $this->assertTrue($translation instanceof AbstractTranslation);
         $this->assertEquals($translation->getValue(), 'some name');
         $this->assertEquals($translation->getEntityId(), '1');
         $this->assertEquals($translation->getKey(), 'name');

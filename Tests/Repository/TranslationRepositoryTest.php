@@ -16,7 +16,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
 use SOW\TranslationBundle\Repository\TranslationRepository;
 use SOW\TranslationBundle\Service\TranslationService;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
@@ -35,7 +35,7 @@ class TranslationRepositoryTest extends WebTestCase
     protected $em;
 
     /**
-     * @var Translation
+     * @var AbstractTranslation
      */
     protected $translation;
 
@@ -44,7 +44,7 @@ class TranslationRepositoryTest extends WebTestCase
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->translation = $this->getMockBuilder(Translation::class)
+        $this->translation = $this->getMockBuilder(AbstractTranslation::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -90,7 +90,7 @@ class TranslationRepositoryTest extends WebTestCase
         $this->em->expects($this->once())
             ->method('createQueryBuilder')
             ->will($this->returnValue($queryBuilder));
-        $repository = new TranslationRepository($this->em, Translation::class);
+        $repository = new TranslationRepository($this->em, AbstractTranslation::class);
         $this->assertTrue($repository instanceof TranslationRepository);
         $result = $repository->findOneBy(["lang" => "fr", "entityName" => TestObject::class]);
         $this->assertEquals($result, $this->translation);
@@ -141,7 +141,7 @@ class TranslationRepositoryTest extends WebTestCase
         $this->em->expects($this->once())
             ->method('createQueryBuilder')
             ->will($this->returnValue($queryBuilder));
-        $repository = new TranslationRepository($this->em, Translation::class);
+        $repository = new TranslationRepository($this->em, AbstractTranslation::class);
         $this->assertTrue($repository instanceof TranslationRepository);
         $result = $repository->findBy(["lang" => "fr", "entityName" => TestObject::class], ['lang' => 'fr']);
         $this->assertEquals($result, [$this->translation]);
@@ -193,7 +193,7 @@ class TranslationRepositoryTest extends WebTestCase
             ->will($this->returnValue($queryBuilder));
 
         $testObject = new TestObject();
-        $repository = new TranslationRepository($this->em, Translation::class);
+        $repository = new TranslationRepository($this->em, AbstractTranslation::class);
         $this->assertTrue($repository instanceof TranslationRepository);
         $result = $repository->findAllByObjectAndLangs($testObject, ['fr']);
         $this->assertEquals($result, [$this->translation]);

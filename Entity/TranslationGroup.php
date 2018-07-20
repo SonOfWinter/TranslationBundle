@@ -24,7 +24,7 @@ class TranslationGroup
      * List of translation
      * Keys are translation's keys
      *
-     * @var Translation[]
+     * @var AbstractTranslation[]
      */
     protected $translations = [];
 
@@ -53,7 +53,7 @@ class TranslationGroup
     /**
      * Getter for translations
      *
-     * @return Translation[]
+     * @return AbstractTranslation[]
      */
     public function getTranslations(): array
     {
@@ -63,7 +63,7 @@ class TranslationGroup
     /**
      * Setter for translations
      *
-     * @param Translation[] $translations
+     * @param AbstractTranslation[] $translations
      *
      * @return self
      */
@@ -109,11 +109,11 @@ class TranslationGroup
     /**
      * Add or replace translation
      *
-     * @param Translation $translation
+     * @param AbstractTranslation $translation
      *
      * @return TranslationGroup
      */
-    public function addTranslation(Translation $translation): self
+    public function addTranslation(AbstractTranslation $translation): self
     {
         $this->translations[$translation->getKey()] = $translation;
         return $this;
@@ -122,11 +122,11 @@ class TranslationGroup
     /**
      * Remove all translations for lang if exist
      *
-     * @param string $lang
+     * @param AbstractTranslation $translation
      *
      * @return TranslationGroup
      */
-    public function removeTranslations(Translation $translation): self
+    public function removeTranslations(AbstractTranslation $translation): self
     {
         if (array_key_exists($translation->getKey(), $this->translations)) {
             unset($this->translations[$translation->getKey()]);
@@ -139,9 +139,9 @@ class TranslationGroup
      *
      * @param string $key
      *
-     * @return null|Translation
+     * @return null|AbstractTranslation
      */
-    public function getKey(string $key): ?Translation
+    public function getKey(string $key): ? AbstractTranslation
     {
         return $this->translations[$key] ?? null;
     }

@@ -30,18 +30,18 @@ class TranslationRepository implements TranslationRepositoryInterface
     /**
      * @var string
      */
-    protected $translationClass;
+    protected $translationClassName;
 
     /**
      * TranslationRepository constructor.
      *
      * @param EntityManagerInterface $em
-     * @param string $translationClass
+     * @param string $translationClassName
      */
-    public function __construct(EntityManagerInterface $em, string $translationClass)
+    public function __construct(EntityManagerInterface $em, string $translationClassName)
     {
         $this->em = $em;
-        $this->translationClass = $translationClass;
+        $this->translationClassName = $translationClassName;
     }
 
     /**
@@ -58,7 +58,7 @@ class TranslationRepository implements TranslationRepositoryInterface
         $qb = $this->em->createQueryBuilder();
         $qb->select('t')
             ->from(
-                $this->translationClass,
+                $this->translationClassName,
                 't'
             );
         $parameterCount = 0;
@@ -84,7 +84,7 @@ class TranslationRepository implements TranslationRepositoryInterface
         $qb = $this->em->createQueryBuilder();
         $qb->select('t')
             ->from(
-                $this->translationClass,
+                $this->translationClassName,
                 't'
             );
         $parameterCount = 0;
@@ -115,7 +115,7 @@ class TranslationRepository implements TranslationRepositoryInterface
         $qb = $this->em->createQueryBuilder();
         $qb->select('t');
         $qb->from(
-            $this->translationClass,
+            $this->translationClassName,
             't'
         )->where('t.entityName : :entityName')->andWhere('t.entityId : :entityId')->andWhere('t.lang IN (:langs)')->orderBy(
             't.key',

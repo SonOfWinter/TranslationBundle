@@ -11,6 +11,13 @@ $ composer require sonofwinter/translation-bundle
 Usage
 =====
 
+Create a Translation entity class who extends AbstractTranslation
+set sow_translation.translation_class_name parameter to
+
+```xml
+<parameter key="sow_translation.translation_class_name">App\Entity\Translation</parameter>
+```
+
 Define tranlated properties in your entity
 
 ```php

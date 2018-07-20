@@ -1,8 +1,6 @@
 <?php
 
 /**
- * TODO File description
- *
  * PHP Version 7.1
  *
  * @package  SOW\TranslationBundle\Tests

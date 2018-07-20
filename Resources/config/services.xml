@@ -6,13 +6,13 @@
 
     <parameters>
         <parameter key="sow_translation.annotation_class_name">SOW\TranslationBundle\Annotation\Translation</parameter>
-        <parameter key="sow_translation.translation_class_name">SOW\TranslationBundle\Entity\Translation</parameter>
+        <parameter key="sow_translation.translation_class_name">SOW\Test\TranslationBundle\Fixtures\Translation\Translation</parameter>
     </parameters>
 
     <services>
         <service id="sow_translation.translation_repository" class="SOW\TranslationBundle\Repository\TranslationRepository" public="false">
             <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument key="$translationClass">%sow_translation.translation_class_name%</argument>
+            <argument key="$translationClassName">%sow_translation.translation_class_name%</argument>
         </service>
         <service id="sow_translation.annotation_class_loader" class="SOW\TranslationBundle\Loader\AnnotationClassLoader" public="false">
             <argument type="service" id="annotation_reader" />
@@ -21,6 +21,7 @@
         <service id="sow_translation.translation_service" class="SOW\TranslationBundle\Service\TranslationService" public="true">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sow_translation.translation_repository" />
+            <argument key="$translationClassName">%sow_translation.translation_class_name%</argument>
         </service>
         <service id="sow_translation.translator" class="SOW\TranslationBundle\Translator" public="true">
             <argument type="service" id="sow_translation.translation_service" />

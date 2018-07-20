@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Translation class
+ * AbstractTranslation abstract class
  *
  * PHP Version 7.1
  *
@@ -15,14 +15,13 @@ namespace SOW\TranslationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Translation
+ * Class AbstractTranslation
  *
  * @package SOW\TranslationBundle\Entity
  *
- * @ORM\Table(name="`translation`")
- * @ORM\Entity(repositoryClass="SOW\TranslationBundle\Repository\TranslationRepository")
+ * @ORM\MappedSuperclass
  */
-class Translation
+abstract class AbstractTranslation
 {
     /**
      * @var string

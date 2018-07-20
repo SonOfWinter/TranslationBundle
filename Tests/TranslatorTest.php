@@ -1,8 +1,6 @@
 <?php
 
 /**
- * TODO File description
- *
  * PHP Version 7.1
  *
  * @package  SOW\TranslationBundle\Tests
@@ -15,7 +13,7 @@ namespace SOW\TranslationBundle\Tests;
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
 use SOW\TranslationBundle\Entity\TranslationGroup;
 use SOW\TranslationBundle\Service\TranslationService;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;

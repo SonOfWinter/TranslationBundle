@@ -13,7 +13,7 @@
 namespace SOW\TranslationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
 use SOW\TranslationBundle\Entity\TranslationGroup;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
 

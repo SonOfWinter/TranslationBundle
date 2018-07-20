@@ -13,7 +13,8 @@
 namespace SOW\TranslationBundle\Tests\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
+use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
 use SOW\TranslationBundle\Repository\TranslationRepository;
 use SOW\TranslationBundle\Service\TranslationService;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
@@ -42,7 +43,7 @@ class TranslationServiceTest extends WebTestCase
     protected $testObject;
 
     /**
-     * @var Translation
+     * @var AbstractTranslation
      */
     protected $translation;
 
@@ -65,7 +66,7 @@ class TranslationServiceTest extends WebTestCase
         $this->repository->expects($this->once())
             ->method('findBy')
             ->will($this->returnValue([$this->translation]));
-        $service = new TranslationService($this->em, $this->repository);
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
         $this->assertTrue($service instanceof TranslationService);
         $result = $service->findAllForObjectWithLang($this->testObject, 'fr');
         $this->assertEquals($result, [$this->translation]);
@@ -76,7 +77,7 @@ class TranslationServiceTest extends WebTestCase
         $this->repository->expects($this->once())
             ->method('findOneBy')
             ->will($this->returnValue($this->translation));
-        $service = new TranslationService($this->em, $this->repository);
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
         $this->assertTrue($service instanceof TranslationService);
         $result = $service->findOneForObjectWithLang($this->testObject, 'name', 'fr');
         $this->assertEquals($result, $this->translation);
@@ -87,7 +88,7 @@ class TranslationServiceTest extends WebTestCase
         $this->repository->expects($this->once())
             ->method('findBy')
             ->will($this->returnValue([$this->translation]));
-        $service = new TranslationService($this->em, $this->repository);
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
         $this->assertTrue($service instanceof TranslationService);
         $result = $service->findAllForObject($this->testObject);
         $this->assertEquals($result, [$this->translation]);
@@ -95,7 +96,7 @@ class TranslationServiceTest extends WebTestCase
 
     public function testCreateWithoutFlush()
     {
-        $service = new TranslationService($this->em, $this->repository);
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
         $this->assertTrue($service instanceof TranslationService);
         $translation = $service->create(
             $this->testObject,
@@ -103,7 +104,7 @@ class TranslationServiceTest extends WebTestCase
             'name',
             'test'
         );
-        $this->assertTrue($translation instanceof Translation);
+        $this->assertTrue($translation instanceof AbstractTranslation);
         $this->assertEquals($translation->getLang(), 'fr');
         $this->assertEquals($translation->getEntityName(), $this->testObject->getEntityName());
         $this->assertEquals($translation->getEntityId(), $this->testObject->getId());
@@ -115,7 +116,7 @@ class TranslationServiceTest extends WebTestCase
     {
         $this->em->expects($this->once())->method('persist');
         $this->em->expects($this->once())->method('flush');
-        $service = new TranslationService($this->em, $this->repository);
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
         $this->assertTrue($service instanceof TranslationService);
         $translation = $service->create(
             $this->testObject,
@@ -124,7 +125,7 @@ class TranslationServiceTest extends WebTestCase
             'test',
             true
         );
-        $this->assertTrue($translation instanceof Translation);
+        $this->assertTrue($translation instanceof AbstractTranslation);
         $this->assertEquals($translation->getLang(), 'fr');
         $this->assertEquals($translation->getEntityName(), $this->testObject->getEntityName());
         $this->assertEquals($translation->getEntityId(), $this->testObject->getId());
@@ -144,7 +145,7 @@ class TranslationServiceTest extends WebTestCase
             ->method('findOneBy')
             ->will($this->returnValue($translation));
         $this->em->expects($this->once())->method('flush');
-        $service = new TranslationService($this->em, $this->repository);
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
         $this->assertTrue($service instanceof TranslationService);
         $translation = $service->edit(
             $this->testObject,
@@ -153,7 +154,7 @@ class TranslationServiceTest extends WebTestCase
             'test',
             true
         );
-        $this->assertTrue($translation instanceof Translation);
+        $this->assertTrue($translation instanceof AbstractTranslation);
         $this->assertEquals($translation->getLang(), 'fr');
         $this->assertEquals($translation->getEntityName(), $this->testObject->getEntityName());
         $this->assertEquals($translation->getEntityId(), $this->testObject->getId());
@@ -168,7 +169,7 @@ class TranslationServiceTest extends WebTestCase
             ->will($this->returnValue(null));
         $this->em->expects($this->once())->method('persist');
         $this->em->expects($this->once())->method('flush');
-        $service = new TranslationService($this->em, $this->repository);
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
         $this->assertTrue($service instanceof TranslationService);
         $translation = $service->edit(
             $this->testObject,
@@ -177,7 +178,7 @@ class TranslationServiceTest extends WebTestCase
             'test',
             true
         );
-        $this->assertTrue($translation instanceof Translation);
+        $this->assertTrue($translation instanceof AbstractTranslation);
         $this->assertEquals($translation->getEntityName(), $this->testObject->getEntityName());
         $this->assertEquals($translation->getEntityId(), $this->testObject->getId());
         $this->assertEquals($translation->getValue(), 'test');

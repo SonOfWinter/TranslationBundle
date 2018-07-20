@@ -14,7 +14,7 @@ namespace SOW\TranslationBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use SOW\TranslationBundle\Entity\Translatable;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
 use SOW\TranslationBundle\Repository\TranslationRepositoryInterface;
 
 /**
@@ -35,6 +35,11 @@ class TranslationService implements TranslationServiceInterface
     protected $repository;
 
     /**
+     * @var string
+     */
+    protected $translationClassName;
+
+    /**
      * TranslationService constructor.
      *
      * @param EntityManagerInterface $em
@@ -42,10 +47,12 @@ class TranslationService implements TranslationServiceInterface
      */
     public function __construct(
         EntityManagerInterface $em,
-        TranslationRepositoryInterface $repository
+        TranslationRepositoryInterface $repository,
+        string $translationClassName
     ) {
         $this->em = $em;
         $this->repository = $repository;
+        $this->translationClassName = $translationClassName;
     }
 
     /**
@@ -78,13 +85,13 @@ class TranslationService implements TranslationServiceInterface
      * @param string $key
      * @param string $lang
      *
-     * @return Translation|null
+     * @return AbstractTranslation|null
      */
     public function findOneForObjectWithLang(
         Translatable $translatable,
         string $key,
         string $lang
-    ): ?Translation {
+    ): ?AbstractTranslation {
         return $this->repository->findOneBy(
             [
                 "entityName" => $translatable->getEntityName(),
@@ -125,7 +132,7 @@ class TranslationService implements TranslationServiceInterface
      * @param string $value
      * @param bool $flush
      *
-     * @return Translation
+     * @return AbstractTranslation
      */
     public function create(
         Translatable $translatable,
@@ -133,8 +140,9 @@ class TranslationService implements TranslationServiceInterface
         string $key,
         string $value,
         bool $flush = false
-    ): Translation {
-        $translation = new Translation();
+    ): AbstractTranslation {
+        $class = $this->translationClassName;
+        $translation = new $class();
         $translation->setEntityId($translatable->getId())
             ->setEntityName($translatable->getEntityName())
             ->setKey($key)
@@ -156,7 +164,7 @@ class TranslationService implements TranslationServiceInterface
      * @param string $value
      * @param bool $flush
      *
-     * @return Translation
+     * @return AbstractTranslation
      */
     public function edit(
         Translatable $translatable,
@@ -164,7 +172,7 @@ class TranslationService implements TranslationServiceInterface
         string $key,
         string $value,
         bool $flush = false
-    ): Translation {
+    ): AbstractTranslation {
         $translation = $this->findOneForObjectWithLang($translatable, $key, $lang);
         if ($translation) {
             $translation->setValue($value);

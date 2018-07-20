@@ -14,7 +14,7 @@ namespace SOW\TranslationBundle;
 
 use Psr\Log\LoggerInterface;
 use SOW\TranslationBundle\Entity\Translatable;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
 use SOW\TranslationBundle\Entity\TranslationGroup;
 use SOW\TranslationBundle\Exception\TranslatableConfigurationException;
 use SOW\TranslationBundle\Exception\TranslatorConfigurationException;
@@ -106,7 +106,7 @@ class Translator implements TranslatorInterface
      * @param Translatable $translatable
      * @param string $lang
      *
-     * @return Translation
+     * @return AbstractTranslation
      */
     public function getTranslationGroupForLang(
         Translatable $translatable,
@@ -130,7 +130,7 @@ class Translator implements TranslatorInterface
      * @param string $value
      * @param bool $flush
      *
-     * @return Translation
+     * @return AbstractTranslation
      */
     public function setTranslationForLangAndValue(
         Translatable $translatable,
@@ -138,8 +138,8 @@ class Translator implements TranslatorInterface
         string $key,
         string $value,
         bool $flush = false
-    ): Translation {
-        /** @var Translation $translation */
+    ): AbstractTranslation {
+        /** @var AbstractTranslation $translation */
         return $this->translationService->edit($translatable, $lang, $key, $value, $flush);
     }
 

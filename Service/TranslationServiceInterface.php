@@ -13,7 +13,7 @@
 namespace SOW\TranslationBundle\Service;
 
 use SOW\TranslationBundle\Entity\Translatable;
-use SOW\TranslationBundle\Entity\Translation;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
 
 /**
  * Interface TranslationService
@@ -41,7 +41,7 @@ interface TranslationServiceInterface
         string $key,
         string $value,
         bool $flush = false
-    ): Translation;
+    ): AbstractTranslation;
 
     public function edit(
         Translatable $translatable,
@@ -49,5 +49,5 @@ interface TranslationServiceInterface
         string $key,
         string $value,
         bool $flush = false
-    ): Translation;
+    ): AbstractTranslation;
 }
