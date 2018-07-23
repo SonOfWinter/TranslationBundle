@@ -48,4 +48,17 @@ interface TranslatorInterface
     ): TranslationGroup;
 
     public function translate(Translatable $translatable, string $lang): Translatable;
+
+    public function remove(AbstractTranslation $translation, bool $flush = false): bool;
+
+    public function removeByObjectKeyAndLang(
+        Translatable $object,
+        string $key,
+        string $lang,
+        bool $flush = false
+    ): bool;
+
+    public function removeAllForTranslatable(Translatable $object, bool $flush = false): bool;
+
+    public function removeAllByKey(string $key, bool $flush = false): bool;
 }
