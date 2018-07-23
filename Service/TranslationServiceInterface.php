@@ -35,6 +35,10 @@ interface TranslationServiceInterface
 
     public function findAllForObject(Translatable $translatable);
 
+    public function findByKey(string $key): array;
+
+    public function checkTranslation(Translatable $object, string $key, string $lang): bool;
+
     public function create(
         Translatable $translatable,
         string $lang,
@@ -50,4 +54,17 @@ interface TranslationServiceInterface
         string $value,
         bool $flush = false
     ): AbstractTranslation;
+
+    public function remove(AbstractTranslation $translation, bool $flush = false): bool;
+
+    public function removeByObjectKeyAndLang(
+        Translatable $object,
+        string $key,
+        string $lang,
+        bool $flush = false
+    ): bool;
+
+    public function removeAllForTranslatable(Translatable $object, bool $flush = false): bool;
+
+    public function removeAllByKey(string $key, bool $flush = false): bool;
 }

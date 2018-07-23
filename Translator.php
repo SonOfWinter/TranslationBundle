@@ -57,8 +57,8 @@ class Translator implements TranslatorInterface
      * Translator constructor.
      *
      * @param TranslationServiceInterface $translationService
-     * @param LoaderInterface             $loader
-     * @param null|LoggerInterface        $logger
+     * @param LoaderInterface $loader
+     * @param null|LoggerInterface $logger
      */
     public function __construct(
         TranslationServiceInterface $translationService,
@@ -79,6 +79,20 @@ class Translator implements TranslatorInterface
     public function setResource($resource)
     {
         $this->resource = $resource;
+    }
+
+    /**
+     * checkTranslation
+     *
+     * @param Translatable $object
+     * @param string $key
+     * @param string $lang
+     *
+     * @return bool
+     */
+    public function checkTranslation(Translatable $object, string $key, string $lang): bool
+    {
+        return $this->translationService->checkTranslation($object, $key, $lang);
     }
 
     /**
@@ -208,5 +222,63 @@ class Translator implements TranslatorInterface
             }
         }
         return $translatable;
+    }
+
+    /**
+     * remove
+     *
+     * @param AbstractTranslation $translation
+     * @param bool $flush
+     *
+     * @return bool
+     */
+    public function remove(AbstractTranslation $translation, bool $flush = false): bool
+    {
+        return $this->translationService->remove($translation, $flush);
+    }
+
+    /**
+     * removeByObjectKeyAndLang
+     *
+     * @param Translatable $object
+     * @param string $key
+     * @param string $lang
+     * @param bool $flush
+     *
+     * @return bool
+     */
+    public function removeByObjectKeyAndLang(
+        Translatable $object,
+        string $key,
+        string $lang,
+        bool $flush = false
+    ): bool {
+        return $this->translationService->removeByObjectKeyAndLang($object, $key, $lang, $flush);
+    }
+
+    /**
+     * removeAllForTranslatable
+     *
+     * @param Translatable $object
+     * @param bool $flush
+     *
+     * @return bool
+     */
+    public function removeAllForTranslatable(Translatable $object, bool $flush = false): bool
+    {
+        return $this->translationService->removeAllForTranslatable($object, $flush);
+    }
+
+    /**
+     * removeAllByKey
+     *
+     * @param string $key
+     * @param bool $flush
+     *
+     * @return bool
+     */
+    public function removeAllByKey(string $key, bool $flush = false): bool
+    {
+        return $this->translationService->removeAllByKey($key, $flush);
     }
 }

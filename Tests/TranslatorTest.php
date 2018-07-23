@@ -228,4 +228,45 @@ class TranslatorTest extends TestCase
         $translator = new Translator($this->translationService, $this->loader, $this->logger);
         $translator->translate($wrongObject, 'fr');
     }
+
+    public function testRemoveWithFlush()
+    {
+        $translation = new Translation();
+        $this->translationService->expects($this->once())
+            ->method('remove')
+            ->will($this->returnValue(true));
+        $translator = new Translator($this->translationService, $this->loader, $this->logger);
+        $result = $translator->remove($translation, true);
+        $this->assertTrue($result);
+    }
+
+    public function testRemoveByObjectKeyAndLangWithFlush()
+    {
+        $this->translationService->expects($this->once())
+            ->method('removeByObjectKeyAndLang')
+            ->will($this->returnValue(true));
+        $translator = new Translator($this->translationService, $this->loader, $this->logger);
+        $result = $translator->removeByObjectKeyAndLang($this->testObject, 'name', 'fr', true);
+        $this->assertTrue($result);
+    }
+
+    public function testRemoveAllForTranslatableWithFlush()
+    {
+        $this->translationService->expects($this->once())
+            ->method('removeAllForTranslatable')
+            ->will($this->returnValue(true));
+        $translator = new Translator($this->translationService, $this->loader, $this->logger);
+        $result = $translator->removeAllForTranslatable($this->testObject, true);
+        $this->assertTrue($result);
+    }
+
+    public function testRemoveAllByKeyWithFlush()
+    {
+        $this->translationService->expects($this->once())
+            ->method('removeAllByKey')
+            ->will($this->returnValue(true));
+        $translator = new Translator($this->translationService, $this->loader, $this->logger);
+        $result = $translator->removeAllByKey('name', true);
+        $this->assertTrue($result);
+    }
 }

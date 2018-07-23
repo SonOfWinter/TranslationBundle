@@ -94,6 +94,39 @@ class TranslationServiceTest extends WebTestCase
         $this->assertEquals($result, [$this->translation]);
     }
 
+    public function testfindByKey()
+    {
+        $this->repository->expects($this->once())
+            ->method('findBy')
+            ->will($this->returnValue([$this->translation]));
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->findByKey('name');
+        $this->assertEquals($result, [$this->translation]);
+    }
+
+    public function testCheckTranslationWithTranslation()
+    {
+        $this->repository->expects($this->once())
+            ->method('findOneBy')
+            ->will($this->returnValue($this->translation));
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->checkTranslation($this->testObject, 'name', 'fr');
+        $this->assertTrue($result);
+    }
+
+    public function testCheckTranslationWithoutTranslation()
+    {
+        $this->repository->expects($this->once())
+            ->method('findOneBy')
+            ->will($this->returnValue(null));
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->checkTranslation($this->testObject, 'name', 'fr');
+        $this->assertFalse($result);
+    }
+
     public function testCreateWithoutFlush()
     {
         $service = new TranslationService($this->em, $this->repository, Translation::class);
@@ -137,10 +170,10 @@ class TranslationServiceTest extends WebTestCase
     {
         $translation = new Translation();
         $translation->setEntityId($this->testObject->getId())
-        ->setEntityName($this->testObject->getEntityName())
-        ->setKey('name')
-        ->setLang('fr')
-        ->setValue('testest');
+            ->setEntityName($this->testObject->getEntityName())
+            ->setKey('name')
+            ->setLang('fr')
+            ->setValue('testest');
         $this->repository->expects($this->once())
             ->method('findOneBy')
             ->will($this->returnValue($translation));
@@ -182,5 +215,54 @@ class TranslationServiceTest extends WebTestCase
         $this->assertEquals($translation->getEntityName(), $this->testObject->getEntityName());
         $this->assertEquals($translation->getEntityId(), $this->testObject->getId());
         $this->assertEquals($translation->getValue(), 'test');
+    }
+
+    public function testRemoveWithFlush()
+    {
+        $this->em->expects($this->once())->method('remove');
+        $this->em->expects($this->once())->method('flush');
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->remove($this->translation, true);
+        $this->assertTrue($result);
+    }
+
+    public function testRemoveByObjectKeyAndLangWithFlush()
+    {
+        $this->repository->expects($this->once())
+            ->method('findOneBy')
+            ->will($this->returnValue($this->translation));
+        $this->em->expects($this->once())->method('remove');
+        $this->em->expects($this->once())->method('flush');
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->removeByObjectKeyAndLang($this->testObject, 'name', 'fr', true);
+        $this->assertTrue($result);
+    }
+
+    public function testRemoveAllForTranslatableWithFlush()
+    {
+        $this->repository->expects($this->once())
+            ->method('findBy')
+            ->will($this->returnValue([$this->translation]));
+        $this->em->expects($this->once())->method('remove');
+        $this->em->expects($this->once())->method('flush');
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->removeAllForTranslatable($this->testObject, true);
+        $this->assertTrue($result);
+    }
+
+    public function testremoveAllByKeyWithFlush()
+    {
+        $this->repository->expects($this->once())
+            ->method('findBy')
+            ->will($this->returnValue([$this->translation]));
+        $this->em->expects($this->once())->method('remove');
+        $this->em->expects($this->once())->method('flush');
+        $service = new TranslationService($this->em, $this->repository, Translation::class);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->removeAllByKey('name', true);
+        $this->assertTrue($result);
     }
 }

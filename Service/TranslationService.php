@@ -44,6 +44,7 @@ class TranslationService implements TranslationServiceInterface
      *
      * @param EntityManagerInterface $em
      * @param TranslationRepositoryInterface $repository
+     * @param string $translationClassName
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -56,7 +57,7 @@ class TranslationService implements TranslationServiceInterface
     }
 
     /**
-     * Find all translation for a trnaslatable and a lang
+     * Find all translation for a translatable and a lang
      *
      * @param Translatable $translatable
      * @param string $lang
@@ -107,8 +108,6 @@ class TranslationService implements TranslationServiceInterface
      *
      * @param Translatable $translatable
      *
-     * @throws \UnexpectedValueException
-     *
      * @return array
      */
     public function findAllForObject(Translatable $translatable)
@@ -120,6 +119,39 @@ class TranslationService implements TranslationServiceInterface
             ],
             ["lang" => "ASC"]
         );
+    }
+
+    /**
+     * findByKey
+     *
+     * @param string $key
+     *
+     * @return AbstractTranslation[]|array
+     */
+    public function findByKey(string $key): array
+    {
+        $translations = $this->repository->findBy(
+            [
+                'key' => $key
+            ],
+            ["lang" => "ASC"]
+        );
+        return $translations;
+    }
+
+    /**
+     * checkTranslation
+     *
+     * @param Translatable $object
+     * @param string $key
+     * @param string $lang
+     *
+     * @return bool
+     */
+    public function checkTranslation(Translatable $object, string $key, string $lang): bool
+    {
+        $translation = $this->findOneForObjectWithLang($object, $key, $lang);
+        return $translation !== null;
     }
 
     /**
@@ -183,5 +215,85 @@ class TranslationService implements TranslationServiceInterface
         } else {
             return $this->create($translatable, $lang, $key, $value, $flush);
         }
+    }
+
+    /**
+     * remove
+     *
+     * @param AbstractTranslation $translation
+     * @param bool $flush
+     *
+     * @return bool
+     */
+    public function remove(AbstractTranslation $translation, bool $flush = false): bool
+    {
+        $this->em->remove($translation);
+        if ($flush) {
+            $this->em->flush();
+            return true;
+        }
+        return true;
+    }
+
+    /**
+     * removeByObjectKeyAndLang
+     *
+     * @param Translatable $object
+     * @param string $key
+     * @param string $lang
+     * @param bool $flush
+     *
+     * @return bool
+     */
+    public function removeByObjectKeyAndLang(
+        Translatable $object,
+        string $key,
+        string $lang,
+        bool $flush = false
+    ): bool {
+        $translation = $this->findOneForObjectWithLang($object, $key, $lang);
+        return $this->remove($translation, $flush);
+    }
+
+    /**
+     * removeAllForTranslatable
+     *
+     * @param Translatable $object
+     * @param bool $flush
+     *
+     * @throws \UnexpectedValueException
+     *
+     * @return bool
+     */
+    public function removeAllForTranslatable(Translatable $object, bool $flush = false): bool
+    {
+        $translations = $this->findAllForObject($object);
+        foreach ($translations as $translation) {
+            $this->remove($translation);
+        }
+        if ($flush) {
+            $this->em->flush();
+        }
+        return true;
+    }
+
+    /**
+     * removeAllByKey
+     *
+     * @param string $key
+     * @param bool $flush
+     *
+     * @return bool
+     */
+    public function removeAllByKey(string $key, bool $flush = false): bool
+    {
+        $translations = $this->findByKey($key);
+        foreach ($translations as $translation) {
+            $this->remove($translation);
+        }
+        if ($flush) {
+            $this->em->flush();
+        }
+        return true;
     }
 }
