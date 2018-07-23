@@ -44,7 +44,7 @@ interface TranslatorInterface
         Translatable $translatable,
         string $lang,
         array $values,
-        bool $flush
+        bool $flush = false
     ): TranslationGroup;
 
     public function translate(Translatable $translatable, string $lang): Translatable;
