@@ -13,6 +13,8 @@
 namespace SOW\TranslationBundle\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use SOW\TranslationBundle\Entity\Translatable;
 
 /**
@@ -20,18 +22,8 @@ use SOW\TranslationBundle\Entity\Translatable;
  *
  * @package SOW\TranslationBundle\Repository
  */
-class TranslationRepository implements TranslationRepositoryInterface
+class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * @var string
-     */
-    protected $translationClassName;
-
     /**
      * TranslationRepository constructor.
      *
@@ -40,64 +32,8 @@ class TranslationRepository implements TranslationRepositoryInterface
      */
     public function __construct(EntityManagerInterface $em, string $translationClassName)
     {
-        $this->em = $em;
-        $this->translationClassName = $translationClassName;
-    }
-
-    /**
-     * Find one element with search array
-     *
-     * @param array $data
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     *
-     * @return mixed
-     */
-    public function findOneBy(array $data)
-    {
-        $qb = $this->em->createQueryBuilder();
-        $qb->select('t')
-            ->from(
-                $this->translationClassName,
-                't'
-            );
-        $parameterCount = 0;
-        foreach ($data as $key => $value) {
-            $dataValue = "value{$parameterCount}";
-            $qb->andWhere($qb->expr()->eq("t.{$key}", ":{$dataValue}"));
-            $qb->setParameter($dataValue, $value);
-            $parameterCount++;
-        }
-        return $qb->getQuery()->getOneOrNullResult();
-    }
-
-    /**
-     * Find all elements with search array
-     *
-     * @param array $data
-     * @param array $orderBy
-     *
-     * @return mixed
-     */
-    public function findBy(array $data, array $orderBy = [])
-    {
-        $qb = $this->em->createQueryBuilder();
-        $qb->select('t')
-            ->from(
-                $this->translationClassName,
-                't'
-            );
-        $parameterCount = 0;
-        foreach ($data as $key => $value) {
-            $dataValue = "value{$parameterCount}";
-            $qb->andWhere($qb->expr()->eq("t.{$key}", ":{$dataValue}"));
-            $qb->setParameter($dataValue, $value);
-            $parameterCount++;
-        }
-        foreach ($orderBy as $property => $order) {
-            $qb->orderBy($property, $order);
-        }
-        return $qb->getQuery()->getResult();
+        $classMetaData = new ClassMetadata($translationClassName);
+        parent::__construct($em, $classMetaData);
     }
 
     /**
@@ -112,15 +48,18 @@ class TranslationRepository implements TranslationRepositoryInterface
         Translatable $translatable,
         array $langs
     ) {
-        $qb = $this->em->createQueryBuilder();
+        $qb = $this->_em->createQueryBuilder();
         $qb->select('t');
         $qb->from(
-            $this->translationClassName,
+            $this->_entityName,
             't'
-        )->where('t.entityName : :entityName')->andWhere('t.entityId : :entityId')->andWhere('t.lang IN (:langs)')->orderBy(
-            't.key',
-            'ASC'
-        )
+        )->where('t.`entityName` : :entityName')
+            ->andWhere('t.`entityId` : :entityId')
+            ->andWhere('t.`lang` IN (:langs)')
+            ->orderBy(
+                't.`key`',
+                'ASC'
+            )
             ->setParameters(
                 [
                     "entityName" => $translatable->getEntityName(),
