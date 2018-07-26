@@ -26,7 +26,7 @@ abstract class AbstractTranslation
     /**
      * @var string
      *
-     * @ORM\Column(name="`key`", type="string")
+     * @ORM\Column(name="`key`", type="string", length=150)
      * @ORM\Id
      */
     protected $key;
@@ -34,7 +34,7 @@ abstract class AbstractTranslation
     /**
      * @var string
      *
-     * @ORM\Column(name="`lang`", type="string")
+     * @ORM\Column(name="`lang`", type="string", length=2)
      * @ORM\Id
      */
     protected $lang;
@@ -42,7 +42,7 @@ abstract class AbstractTranslation
     /**
      * @var string
      *
-     * @ORM\Column(name="`entity_name`", type="string")
+     * @ORM\Column(name="`entity_name`", type="string", length=150)
      * @ORM\Id
      */
     protected $entityName;
@@ -50,7 +50,7 @@ abstract class AbstractTranslation
     /**
      * @var string
      *
-     * @ORM\Column(name="`entity_id`", type="string")
+     * @ORM\Column(name="`entity_id`", type="string", length=36)
      * @ORM\Id
      */
     protected $entityId;
