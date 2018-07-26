@@ -174,6 +174,9 @@ class Translator implements TranslatorInterface
         array $values,
         bool $flush = false
     ): TranslationGroup {
+        if ($this->resource === null) {
+            $this->setResource(get_class($translatable));
+        }
         $translationGroup = new TranslationGroup($translatable, $lang);
         $collection = $this->getTranslationCollection();
         foreach ($collection as $t) {
