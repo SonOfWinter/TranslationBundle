@@ -252,7 +252,11 @@ class TranslationService implements TranslationServiceInterface
         bool $flush = false
     ): bool {
         $translation = $this->findOneForObjectWithLang($object, $key, $lang);
-        return $this->remove($translation, $flush);
+        if ($translation !== null) {
+            return $this->remove($translation, $flush);
+        } else {
+            return true;
+        }
     }
 
     /**
