@@ -265,8 +265,6 @@ class TranslationService implements TranslationServiceInterface
      * @param Translatable $object
      * @param bool $flush
      *
-     * @throws \UnexpectedValueException
-     *
      * @return bool
      */
     public function removeAllForTranslatable(Translatable $object, bool $flush = false): bool

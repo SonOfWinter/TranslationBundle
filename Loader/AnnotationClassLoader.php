@@ -80,12 +80,7 @@ class AnnotationClassLoader implements LoaderInterface
     public function load($class, $type = null): TranslationCollection
     {
         if (!class_exists($class)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Class "%s" does not exist.',
-                    $class
-                )
-            );
+            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
         $class = new \ReflectionClass($class);
         if ($class->isAbstract()) {
@@ -136,15 +131,8 @@ class AnnotationClassLoader implements LoaderInterface
     ) {
         $propertyName = $property->getName();
         $method = $annot->getSetter() ?? 'set' . ucfirst($propertyName);
-        if (in_array(
-            $method,
-            $methods
-        )
-        ) {
-            $translation = new Translation(
-                $annot->getKey(),
-                $method
-            );
+        if (in_array($method, $methods)) {
+            $translation = new Translation($annot->getKey(), $method);
             $collection->add($translation);
         } else {
             throw new TranslatableConfigurationException();
@@ -162,10 +150,7 @@ class AnnotationClassLoader implements LoaderInterface
     public function supports($resource, $type = null)
     {
         return is_string($resource)
-            && preg_match(
-                '/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/',
-                $resource
-            )
+            && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource)
             && (!$type || 'annotation' === $type);
     }
 

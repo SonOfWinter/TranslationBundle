@@ -11,8 +11,10 @@
 namespace SOW\TranslationBundle\Tests;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use SOW\TranslationBundle\Loader\AnnotationClassLoader;
 use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
 use SOW\TranslationBundle\Entity\TranslationGroup;
 use SOW\TranslationBundle\Service\TranslationService;
@@ -44,19 +46,18 @@ class TranslatorTest extends TestCase
     public function setUp()
     {
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->reader = new AnnotationReader();
-        $this->loader = $this->getClassLoader($this->reader);
+        $reader = new AnnotationReader();
+        $this->loader = $this->getClassLoader($reader);
         $this->translationService = $this->getMockBuilder(TranslationService::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->testObject = new TestObject();
     }
 
-    public function getClassLoader($reader)
+    public function getClassLoader($reader): MockObject
     {
-        return $this->getMockBuilder(
-            'SOW\TranslationBundle\Loader\AnnotationClassLoader'
-        )->setConstructorArgs([$reader, $this->translationAnnotationClass])
+        return $this->getMockBuilder(AnnotationClassLoader::class)
+            ->setConstructorArgs([$reader, $this->translationAnnotationClass])
             ->getMockForAbstractClass();
     }
 
@@ -210,21 +211,6 @@ class TranslatorTest extends TestCase
     public function testTranslateWithMisconfiguredObject()
     {
         $wrongObject = new WrongTestObject();
-        $translationFirstName = new Translation();
-        $translationFirstName->setValue('new FirstName')
-            ->setEntityId($wrongObject->getId())
-            ->setKey("firstname")
-            ->setEntityName($wrongObject->getEntityName())
-            ->setLang('fr');
-        $translationLastName = new Translation();
-        $translationLastName->setValue('new LastName')
-            ->setEntityId($wrongObject->getId())
-            ->setKey("lastname")
-            ->setEntityName($wrongObject->getEntityName())
-            ->setLang('fr');
-        $this->translationService->expects($this->once())
-            ->method('findAllForObjectWithLang')
-            ->will($this->returnValue([$translationFirstName, $translationLastName]));
         $translator = new Translator($this->translationService, $this->loader, $this->logger);
         $translator->translate($wrongObject, 'fr');
     }

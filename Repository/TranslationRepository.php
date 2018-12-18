@@ -44,22 +44,15 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
      *
      * @return mixed
      */
-    public function findAllByObjectAndLangs(
-        Translatable $translatable,
-        array $langs
-    ) {
+    public function findAllByObjectAndLangs(Translatable $translatable, array $langs)
+    {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t');
-        $qb->from(
-            $this->_entityName,
-            't'
-        )->where('t.`entityName` : :entityName')
+        $qb->from($this->_entityName, 't')
+            ->where('t.`entityName` : :entityName')
             ->andWhere('t.`entityId` : :entityId')
             ->andWhere('t.`lang` IN (:langs)')
-            ->orderBy(
-                't.`key`',
-                'ASC'
-            )
+            ->orderBy('t.`key`', 'ASC')
             ->setParameters(
                 [
                     "entityName" => $translatable->getEntityName(),

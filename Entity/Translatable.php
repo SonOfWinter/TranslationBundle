@@ -19,7 +19,19 @@ namespace SOW\TranslationBundle\Entity;
  */
 interface Translatable
 {
+    /**
+     * getEntityName
+     * Getter for entityName
+     *
+     * @return string
+     */
     public function getEntityName(): string;
 
+    /**
+     * getId
+     * Getter for id
+     *
+     * @return string
+     */
     public function getId(): string;
 }

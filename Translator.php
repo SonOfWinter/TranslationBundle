@@ -72,13 +72,18 @@ class Translator implements TranslatorInterface
     }
 
     /**
+     * setResource
+     *
      * @param $resource
+     *
+     * @throws \Exception
      *
      * @return void
      */
     public function setResource($resource)
     {
         $this->resource = $resource;
+        $this->loadCollection();
     }
 
     /**
@@ -96,6 +101,7 @@ class Translator implements TranslatorInterface
     }
 
     /**
+     * getTranslationCollection
      * Get TranslationCollection for a resource
      *
      * @throws TranslatorConfigurationException
@@ -109,18 +115,32 @@ class Translator implements TranslatorInterface
             throw new TranslatorConfigurationException();
         }
         if (null === $this->collection) {
-            $this->collection = $this->loader->load($this->resource, 'annotation');
+            return $this->loadCollection();
         }
         return $this->collection;
     }
 
     /**
+     * loadCollection
+     *
+     * @throws \Exception
+     *
+     * @return TranslationCollection|null
+     */
+    private function loadCollection()
+    {
+        $this->collection = $this->loader->load($this->resource, 'annotation');
+        return $this->collection;
+    }
+
+    /**
+     * getTranslationGroupForLang
      * Get all translation in TranslationGroup for lang
      *
      * @param Translatable $translatable
      * @param string $lang
      *
-     * @return AbstractTranslation
+     * @return TranslationGroup
      */
     public function getTranslationGroupForLang(
         Translatable $translatable,
@@ -134,8 +154,8 @@ class Translator implements TranslatorInterface
         return $translationGroup;
     }
 
-
     /**
+     * setTranslationForLangAndValue
      * Create or edit translation
      *
      * @param Translatable $translatable
@@ -158,6 +178,7 @@ class Translator implements TranslatorInterface
     }
 
     /**
+     * setTranslationForLangAndValues
      * Set all translation from array match with entity's annotations
      *
      * @param Translatable $translatable
@@ -166,6 +187,7 @@ class Translator implements TranslatorInterface
      * @param bool $flush
      *
      * @throws TranslatorConfigurationException
+     *
      * @return TranslationGroup
      */
     public function setTranslationForLangAndValues(
@@ -174,7 +196,7 @@ class Translator implements TranslatorInterface
         array $values,
         bool $flush = false
     ): TranslationGroup {
-        if ($this->resource === null) {
+        if ($this->resource !== get_class($translatable)) {
             $this->setResource(get_class($translatable));
         }
         $translationGroup = new TranslationGroup($translatable, $lang);
@@ -196,6 +218,7 @@ class Translator implements TranslatorInterface
     }
 
     /**
+     * translate
      * Set entity's properties with translations for lang
      *
      * @param Translatable $translatable
@@ -208,7 +231,7 @@ class Translator implements TranslatorInterface
      */
     public function translate(Translatable $translatable, string $lang): Translatable
     {
-        if ($this->resource === null) {
+        if ($this->resource !== get_class($translatable)) {
             $this->setResource(get_class($translatable));
         }
         $translationGroup = $this->getTranslationGroupForLang($translatable, $lang);

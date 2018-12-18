@@ -21,6 +21,14 @@ use SOW\TranslationBundle\Entity\Translatable;
  */
 interface TranslationRepositoryInterface
 {
+    /**
+     * find all by object and langs
+     *
+     * @param Translatable $translatable
+     * @param array $langs
+     *
+     * @return mixed
+     */
     public function findAllByObjectAndLangs(
         Translatable $translatable,
         array $langs

@@ -43,17 +43,9 @@ class Translation
     public function __construct(array $data)
     {
         foreach ($data as $key => $value) {
-            $noUnderscoreKey = str_replace(
-                '_',
-                '',
-                $key
-            );
+            $noUnderscoreKey = str_replace('_', '', $key);
             $method = 'set' . $noUnderscoreKey;
-            if (!method_exists(
-                $this,
-                $method
-            )
-            ) {
+            if (!method_exists($this, $method)) {
                 $message = sprintf(
                     'Unknown property "%s" on annotation "%s".',
                     $key,
