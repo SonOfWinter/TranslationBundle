@@ -1,7 +1,6 @@
 Installation
 ============
 
-
 Open a command console, enter your project directory and execute:
 
 ```bash
@@ -11,7 +10,7 @@ $ composer require sonofwinter/translation-bundle
 Usage
 =====
 
-Create a Translation entity class who extends AbstractTranslation
+You can create a Translation entity class who extends AbstractTranslation
 set sow_translation.translation_class_name parameter to
 
 ```xml
@@ -34,7 +33,7 @@ Define translated properties in your entity
     private $lastname;
 ```
 
-You must defined the key property. 
+You can defined the key property for matching another name, if it's not, the property name is taken by default.
 
 The setter property is used if you want to use another setter.
 
@@ -68,7 +67,8 @@ Use Translator service for translate entity
     }
 ```
 
-## Next
+Next
+====
 
 > multilang setter/getter
 
