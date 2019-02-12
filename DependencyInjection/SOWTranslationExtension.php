@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Class SOWTranslationExtension
@@ -48,11 +48,11 @@ class SOWTranslationExtension extends Extension
             $configuration,
             $configs
         );
-        $loader = new XmlFileLoader(
+        $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config')
         );
-        $loader->load('services.xml');
+        $loader->load('services.yml');
         $container->setAlias(
             TranslatorInterface::class,
             new Alias('sow_translation.translator')

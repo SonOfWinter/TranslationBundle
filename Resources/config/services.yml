@@ -1,0 +1,35 @@
+parameters:
+  sow_translation.annotation_class_name: SOW\TranslationBundle\Annotation\Translation
+  sow_translation.translation_class_name: SOW\TranslationBundle\Entity\Translation
+
+services:
+  sow_translation.translation_repository:
+    class: SOW\TranslationBundle\Repository\TranslationRepository
+    public: false
+    arguments:
+      - "doctrine.orm.entity_manager"
+      - "%sow_translation.translation_class_name%"
+
+  sow_translation.annotation_class_loader:
+    class: SOW\TranslationBundle\Loader\AnnotationClassLoader
+    public: false
+    arguments:
+      - "annotation_reader"
+      - "%sow_translation.annotation_class_name%"
+
+  sow_translation.translation_service:
+    class: SOW\TranslationBundle\Service\TranslationService
+    public: true
+    arguments:
+      - "doctrine.orm.entity_manager"
+      - "sow_translation.translation_repository"
+      - "%sow_translation.translation_class_name%"
+
+  sow_translation.translator:
+    class: SOW\TranslationBundle\Translator
+    public: true
+    arguments:
+      - "sow_translation.translation_service"
+      - "sow_translation.annotation_class_loader"
+      - "logger"
+
