@@ -75,7 +75,7 @@ interface TranslatorInterface
 
     /**
      * setTranslationForLangAndValue
-     * Create or edit translation
+     * Create or edit one translation
      *
      * @param Translatable $translatable
      * @param string $lang
@@ -114,6 +114,31 @@ interface TranslatorInterface
     ): TranslationGroup;
 
     /**
+     * setTranslations
+     *
+     * @param Translatable $translatable
+     * @param array $translations
+     * @param bool $flush
+     *
+     * @return array
+     *
+     * Translation array must be like :
+     * [
+     *     "fr" => [
+     *         "property" => "translation"
+     *     ],
+     *     "en" => [
+     *         "property" => "translation"
+     *     ],
+     * ]
+     */
+    public function setTranslations(
+        Translatable $translatable,
+        array $translations,
+        bool $flush = false
+    ): array;
+
+    /**
      * translate
      * Set entity's properties with translations for lang
      *
@@ -126,6 +151,18 @@ interface TranslatorInterface
      * @return Translatable
      */
     public function translate(Translatable $translatable, string $lang): Translatable;
+
+    /**
+     * translateForLangs
+     * Set entity's properties with translations for langs
+     * Return associative array of translated object
+     *
+     * @param Translatable $translatable
+     * @param array $langs
+     *
+     * @return array
+     */
+    public function translateForLangs(Translatable $translatable, array $langs): array;
 
     /**
      * remove
@@ -141,6 +178,7 @@ interface TranslatorInterface
     /**
      * removeByObjectKeyAndLang
      * search and delete a translation matches object-key-lang association
+     *
      * @param Translatable $object
      * @param string $key
      * @param string $lang

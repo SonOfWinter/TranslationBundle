@@ -54,21 +54,28 @@ class Translator implements TranslatorInterface
     protected $translationService;
 
     /**
+     * @var array
+     */
+    protected $langs;
+
+    /**
      * Translator constructor.
      *
      * @param TranslationServiceInterface $translationService
      * @param LoaderInterface $loader
+     * @param array $langs
      * @param null|LoggerInterface $logger
      */
     public function __construct(
         TranslationServiceInterface $translationService,
         LoaderInterface $loader,
+        array $langs,
         ?LoggerInterface $logger = null
     ) {
-
-        $this->logger = $logger;
-        $this->loader = $loader;
         $this->translationService = $translationService;
+        $this->loader = $loader;
+        $this->langs = $langs;
+        $this->logger = $logger;
     }
 
     /**
@@ -214,6 +221,49 @@ class Translator implements TranslatorInterface
         return $translationGroup;
     }
 
+
+    /**
+     * setTranslations
+     *
+     * @param Translatable $translatable
+     * @param array $translations
+     * @param bool $flush
+     *
+     * @throws TranslatorConfigurationException
+     *
+     * @return array
+     *
+     * Translation array must be like :
+     * [
+     *     "fr" => [
+     *         "property" => "translation"
+     *     ],
+     *     "en" => [
+     *         "property" => "translation"
+     *     ],
+     * ]
+     */
+    public function setTranslations(Translatable $translatable, array $translations, bool $flush = false): array
+    {
+        $translationGroups = [];
+        foreach ($translations as $lang => $translation) {
+            if (in_array($lang, $this->langs) and is_array($translation)) {
+                $translationGroups[$lang] = $this->setTranslationForLangAndValues(
+                    $translatable,
+                    $lang,
+                    $translation,
+                    false
+                );
+            } elseif ($this->logger) {
+                $this->logger->info(sprintf("%s not in language list", $lang));
+            }
+        }
+        if ($flush) {
+            $this->translationService->flush();
+        }
+        return $translationGroups;
+    }
+
     /**
      * translate
      * Set entity's properties with translations for lang
@@ -245,6 +295,33 @@ class Translator implements TranslatorInterface
             }
         }
         return $translatable;
+    }
+
+    /**
+     * translateForLangs
+     * Set entity's properties with translations for langs
+     * Return associative array of translated object
+     *
+     * @param Translatable $translatable
+     * @param array $langs
+     *
+     * @throws TranslatableConfigurationException
+     * @throws TranslatorConfigurationException
+     *
+     * @return array
+     */
+    public function translateForLangs(Translatable $translatable, array $langs): array
+    {
+        $translatables = [];
+        foreach ($langs as $lang) {
+            if (in_array($lang, $this->langs)) {
+                $translatableClone = clone $translatable;
+                $translatables[$lang] = $this->translate($translatableClone, $lang);
+            } else {
+                $translatables[$lang] = null;
+            }
+        }
+        return $translatables;
     }
 
     /**

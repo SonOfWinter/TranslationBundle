@@ -2,6 +2,8 @@ parameters:
   sow_translation.annotation_class_name: SOW\TranslationBundle\Annotation\Translation
   sow_translation.translation_class_name: SOW\TranslationBundle\Entity\Translation
 
+  sow_translation.available_locales: [ 'en', 'fr', 'es', 'de', 'it' ]
+
 services:
   sow_translation.translation_repository:
     class: SOW\TranslationBundle\Repository\TranslationRepository
@@ -31,4 +33,5 @@ services:
     arguments:
       - "@sow_translation.translation_service"
       - "@sow_translation.annotation_class_loader"
+      - "%sow_translation.available_locales%"
       - "@logger"

@@ -23,6 +23,13 @@ use SOW\TranslationBundle\Entity\AbstractTranslation;
 interface TranslationServiceInterface
 {
     /**
+     * flush
+     *
+     * @return void
+     */
+    public function flush();
+
+    /**
      * findAllForObjectWithLang
      *
      * @param Translatable $translatable

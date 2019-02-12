@@ -57,6 +57,16 @@ class TranslationService implements TranslationServiceInterface
     }
 
     /**
+     * flush
+     *
+     * @return void
+     */
+    public function flush()
+    {
+        $this->em->flush();
+    }
+
+    /**
      * Find all translation for a translatable and a lang
      *
      * @param Translatable $translatable
@@ -182,7 +192,7 @@ class TranslationService implements TranslationServiceInterface
             ->setValue($value);
         $this->em->persist($translation);
         if ($flush) {
-            $this->em->flush();
+            $this->flush();
         }
         return $translation;
     }
@@ -209,7 +219,7 @@ class TranslationService implements TranslationServiceInterface
         if ($translation) {
             $translation->setValue($value);
             if ($flush) {
-                $this->em->flush();
+                $this->flush();
             }
             return $translation;
         } else {
@@ -229,7 +239,7 @@ class TranslationService implements TranslationServiceInterface
     {
         $this->em->remove($translation);
         if ($flush) {
-            $this->em->flush();
+            $this->flush();
             return true;
         }
         return true;
@@ -274,7 +284,7 @@ class TranslationService implements TranslationServiceInterface
             $this->remove($translation);
         }
         if ($flush) {
-            $this->em->flush();
+            $this->flush();
         }
         return true;
     }
@@ -294,7 +304,7 @@ class TranslationService implements TranslationServiceInterface
             $this->remove($translation);
         }
         if ($flush) {
-            $this->em->flush();
+            $this->flush();
         }
         return true;
     }
