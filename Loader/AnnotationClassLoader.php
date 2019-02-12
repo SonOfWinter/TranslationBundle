@@ -132,7 +132,7 @@ class AnnotationClassLoader implements LoaderInterface
         $propertyName = $property->getName();
         $method = $annot->getSetter() ?? 'set' . ucfirst($propertyName);
         if (in_array($method, $methods)) {
-            $translation = new Translation($annot->getKey(), $method);
+            $translation = new Translation($annot->getKey() ?? $propertyName, $method);
             $collection->add($translation);
         } else {
             throw new TranslatableConfigurationException();
