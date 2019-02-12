@@ -34,7 +34,22 @@ interface TranslationRepositoryInterface
         array $langs
     );
 
+    /**
+     * findBy
+     *
+     * @param array $data
+     * @param array $orderBy
+     *
+     * @return mixed
+     */
     public function findBy(array $data, array $orderBy = []);
 
+    /**
+     * findOneBy
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
     public function findOneBy(array $data);
 }

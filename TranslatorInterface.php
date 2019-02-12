@@ -38,6 +38,7 @@ interface TranslatorInterface
 
     /**
      * checkTranslation
+     * Check if a translation matches key-lang association
      *
      * @param Translatable $object
      * @param string $key
@@ -128,6 +129,7 @@ interface TranslatorInterface
 
     /**
      * remove
+     * delete a translation
      *
      * @param AbstractTranslation $translation
      * @param bool $flush
@@ -138,7 +140,7 @@ interface TranslatorInterface
 
     /**
      * removeByObjectKeyAndLang
-     *
+     * search and delete a translation matches object-key-lang association
      * @param Translatable $object
      * @param string $key
      * @param string $lang
@@ -155,6 +157,7 @@ interface TranslatorInterface
 
     /**
      * removeAllForTranslatable
+     * delete all translation for an object
      *
      * @param Translatable $object
      * @param bool $flush
@@ -165,6 +168,7 @@ interface TranslatorInterface
 
     /**
      * removeAllByKey
+     * delete all translation for a key
      *
      * @param string $key
      * @param bool $flush

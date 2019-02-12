@@ -14,7 +14,7 @@ namespace SOW\TranslationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
 use SOW\TranslationBundle\Entity\AbstractTranslation;
-use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
+use SOW\TranslationBundle\Entity\Translation;
 
 /**
  * Class TranslationTest

@@ -14,7 +14,7 @@ namespace SOW\TranslationBundle\Tests\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use SOW\TranslationBundle\Entity\AbstractTranslation;
-use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
+use SOW\TranslationBundle\Entity\Translation;
 use SOW\TranslationBundle\Repository\TranslationRepository;
 use SOW\TranslationBundle\Service\TranslationService;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;

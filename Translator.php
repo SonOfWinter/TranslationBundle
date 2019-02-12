@@ -114,9 +114,6 @@ class Translator implements TranslatorInterface
         if ($this->resource === null) {
             throw new TranslatorConfigurationException();
         }
-        if (null === $this->collection) {
-            return $this->loadCollection();
-        }
         return $this->collection;
     }
 

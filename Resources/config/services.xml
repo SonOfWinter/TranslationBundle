@@ -6,7 +6,7 @@
 
     <parameters>
         <parameter key="sow_translation.annotation_class_name">SOW\TranslationBundle\Annotation\Translation</parameter>
-        <parameter key="sow_translation.translation_class_name">SOW\Test\TranslationBundle\Fixtures\Translation\Translation</parameter>
+        <parameter key="sow_translation.translation_class_name">SOW\TranslationBundle\Entity\Translation</parameter>
     </parameters>
 
     <services>

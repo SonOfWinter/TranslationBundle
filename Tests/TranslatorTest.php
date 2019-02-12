@@ -14,11 +14,13 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use SOW\TranslationBundle\Entity\Translation;
 use SOW\TranslationBundle\Loader\AnnotationClassLoader;
-use SOW\TranslationBundle\Tests\Fixtures\Translation\Translation;
 use SOW\TranslationBundle\Entity\TranslationGroup;
 use SOW\TranslationBundle\Service\TranslationService;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
+use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObjectThree;
+use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObjectTwo;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\WrongTestObject;
 use SOW\TranslationBundle\TranslationCollection;
 use SOW\TranslationBundle\Translator;
@@ -157,6 +159,41 @@ class TranslatorTest extends TestCase
         $this->assertEquals(count($translationGroup->getTranslations()), 2);
     }
 
+
+    public function testSetTranslationForLangAndValuesWithAnotherResource()
+    {
+        $translationFirstName = new Translation();
+        $translationFirstName->setValue('FirstName')
+            ->setEntityId($this->testObject->getId())
+            ->setKey("firstname")
+            ->setEntityName($this->testObject->getEntityName())
+            ->setLang('fr');
+        $translationLastName = new Translation();
+        $translationLastName->setValue('LastName')
+            ->setEntityId($this->testObject->getId())
+            ->setKey("lastname")
+            ->setEntityName($this->testObject->getEntityName())
+            ->setLang('fr');
+        $this->translationService->expects($this->exactly(2))
+            ->method('edit')
+            ->willReturnOnConsecutiveCalls(
+                $this->returnValue($translationFirstName),
+                $this->returnValue($translationLastName)
+            );
+        $translator = new Translator($this->translationService, $this->loader, $this->logger);
+
+        $tot = new TestObjectTwo();
+        $translator->setResource(get_class($tot));
+        $this->assertTrue($translator instanceof Translator);
+        $translationGroup = $translator->setTranslationForLangAndValues(
+            $this->testObject,
+            'fr',
+            ['firstname' => 'FirstName', 'lastname' => 'LastName']
+        );
+        $this->assertTrue($translationGroup instanceof TranslationGroup);
+        $this->assertEquals(count($translationGroup->getTranslations()), 2);
+    }
+
     public function testTranslateWithResource()
     {
         $translationFirstName = new Translation();
@@ -180,6 +217,31 @@ class TranslatorTest extends TestCase
         $this->assertEquals($this->testObject->getFirstname(), 'new FirstName');
         $this->assertEquals($this->testObject->getLastname(), 'new LastName');
     }
+
+    /**
+     * @expectedException SOW\TranslationBundle\Exception\TranslatableConfigurationException
+     * @expectedExceptionMessage The Entity is misconfigured
+     */
+    public function testTranslateWithResourceAndWrongSetter()
+    {
+        $translationFirstName = new Translation();
+        $translationFirstName->setValue('new FirstName')
+            ->setEntityId($this->testObject->getId())
+            ->setKey("firstname")
+            ->setEntityName($this->testObject->getEntityName())
+            ->setLang('fr');
+        $translationLastName = new Translation();
+        $translationLastName->setValue('new LastName')
+            ->setEntityId($this->testObject->getId())
+            ->setKey("lastname")
+            ->setEntityName($this->testObject->getEntityName())
+            ->setLang('fr');
+        $translator = new Translator($this->translationService, $this->loader, $this->logger);
+        $tot = new TestObjectThree();
+        $translator->setResource(get_class($tot));
+        $translator->translate($tot, 'fr');
+    }
+
 
     public function testTranslateWithoutResource()
     {
@@ -253,6 +315,16 @@ class TranslatorTest extends TestCase
             ->will($this->returnValue(true));
         $translator = new Translator($this->translationService, $this->loader, $this->logger);
         $result = $translator->removeAllByKey('name', true);
+        $this->assertTrue($result);
+    }
+
+    public function testcheckTranslation()
+    {
+        $this->translationService->expects($this->once())
+            ->method('checkTranslation')
+            ->will($this->returnValue(true));
+        $translator = new Translator($this->translationService, $this->loader, $this->logger);
+        $result = $translator->checkTranslation($this->testObject, 'name', 'fr');
         $this->assertTrue($result);
     }
 }

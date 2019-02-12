@@ -18,7 +18,7 @@ set sow_translation.translation_class_name parameter to
 <parameter key="sow_translation.translation_class_name">App\Entity\Translation</parameter>
 ```
 
-Define tranlated properties in your entity
+Define translated properties in your entity
 
 ```php
     /**
