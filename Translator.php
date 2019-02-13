@@ -212,7 +212,7 @@ class Translator implements TranslatorInterface
                         $translatable,
                         $lang,
                         $t->getKey(),
-                        $values[$t->getKey()],
+                        $values[$t->getKey()] ?? '',
                         $flush
                     )
                 );
