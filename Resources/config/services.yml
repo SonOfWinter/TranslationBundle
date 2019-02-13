@@ -26,6 +26,7 @@ services:
       - "@doctrine.orm.entity_manager"
       - "@sow_translation.translation_repository"
       - "%sow_translation.translation_class_name%"
+      - "%sow_translation.available_locales%"
 
   sow_translation.translator:
     class: SOW\TranslationBundle\Translator
