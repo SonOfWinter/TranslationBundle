@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @package SOW\TranslationBundle\Entity
  *
- * @ORM\Table(name="`translation`")
+ * @ORM\Table(name="`sow_translation`")
  * @ORM\Entity(repositoryClass="SOW\TranslationBundle\Repository\TranslationRepository")
  */
 class Translation extends AbstractTranslation
