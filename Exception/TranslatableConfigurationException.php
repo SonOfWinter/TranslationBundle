@@ -27,8 +27,8 @@ class TranslatableConfigurationException extends \Exception
      * @param \Throwable|null $previous
      */
     public function __construct(
-        $message = "",
-        $code = 0,
+        string $message = "",
+        int $code = 0,
         \Throwable $previous = null
     ) {
         if ($message == "") {

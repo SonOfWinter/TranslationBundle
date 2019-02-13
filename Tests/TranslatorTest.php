@@ -20,7 +20,6 @@ use SOW\TranslationBundle\Loader\AnnotationClassLoader;
 use SOW\TranslationBundle\Entity\TranslationGroup;
 use SOW\TranslationBundle\Service\TranslationService;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
-use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObjectThree;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObjectTwo;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\WrongTestObject;
 use SOW\TranslationBundle\TranslationCollection;
@@ -240,7 +239,7 @@ class TranslatorTest extends TestCase
             ->setEntityName($this->testObject->getEntityName())
             ->setLang('fr');
         $translator = new Translator($this->translationService, $this->loader, $this->langs, $this->logger);
-        $tot = new TestObjectThree();
+        $tot = new WrongTestObject();
         $translator->setResource(get_class($tot));
         $translator->translate($tot, 'fr');
     }
@@ -368,13 +367,11 @@ class TranslatorTest extends TestCase
         $translator->setResource(get_class($this->testObject));
         $result = $translator->translateForLangs($this->testObject, ['fr', 'en', 'it']);
         $this->assertTrue(is_array($result));
-        $this->assertCount(3, $result);
+        $this->assertCount(2, $result);
         $this->assertTrue(array_key_exists('fr', $result));
-        $this->assertTrue(array_key_exists('en', $result));
         $this->assertTrue(array_key_exists('en', $result));
         $this->assertTrue($result['fr'] instanceof Translatable);
         $this->assertTrue($result['en'] instanceof Translatable);
-        $this->assertNull($result['it']);
         $this->assertEquals($result['en']->getFirstname(), 'new FirstName');
         $this->assertEquals($result['en']->getLastname(), 'new LastName');
     }
@@ -414,7 +411,6 @@ class TranslatorTest extends TestCase
                 $this->returnValue($translationFirstNameEn),
                 $this->returnValue($translationLastNameEn)
             );
-        $this->logger->expects($this->once())->method('info');
         $this->translationService->expects($this->once())->method('flush');
         $translator = new Translator($this->translationService, $this->loader, $this->langs, $this->logger);
         $translator->setResource(get_class($this->testObject));

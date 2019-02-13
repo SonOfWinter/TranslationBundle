@@ -15,6 +15,7 @@ namespace SOW\TranslationBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use SOW\TranslationBundle\Entity\Translatable;
 use SOW\TranslationBundle\Entity\AbstractTranslation;
+use SOW\TranslationBundle\Exception\TranslatorLangException;
 use SOW\TranslationBundle\Repository\TranslationRepositoryInterface;
 
 /**
@@ -40,20 +41,28 @@ class TranslationService implements TranslationServiceInterface
     protected $translationClassName;
 
     /**
+     * @var array
+     */
+    protected $langs;
+
+    /**
      * TranslationService constructor.
      *
      * @param EntityManagerInterface $em
      * @param TranslationRepositoryInterface $repository
      * @param string $translationClassName
+     * @param array $langs
      */
     public function __construct(
         EntityManagerInterface $em,
         TranslationRepositoryInterface $repository,
-        string $translationClassName
+        string $translationClassName,
+        array $langs
     ) {
         $this->em = $em;
         $this->repository = $repository;
         $this->translationClassName = $translationClassName;
+        $this->langs = $langs;
     }
 
     /**
@@ -72,7 +81,7 @@ class TranslationService implements TranslationServiceInterface
      * @param Translatable $translatable
      * @param string $lang
      *
-     * @throws \UnexpectedValueException
+     * @throws TranslatorLangException
      *
      * @return array
      */
@@ -80,13 +89,17 @@ class TranslationService implements TranslationServiceInterface
         Translatable $translatable,
         string $lang
     ) {
-        return $this->repository->findBy(
-            [
-                "entityName" => $translatable->getEntityName(),
-                "entityId" => $translatable->getId(),
-                "lang" => $lang
-            ]
-        );
+        if (!in_array($lang, $this->langs)) {
+            throw new TranslatorLangException();
+        } else {
+            return $this->repository->findBy(
+                [
+                    "entityName" => $translatable->getEntityName(),
+                    "entityId" => $translatable->getId(),
+                    "lang" => $lang
+                ]
+            );
+        }
     }
 
     /**
@@ -96,6 +109,8 @@ class TranslationService implements TranslationServiceInterface
      * @param string $key
      * @param string $lang
      *
+     * @throws TranslatorLangException
+     *
      * @return AbstractTranslation|null
      */
     public function findOneForObjectWithLang(
@@ -103,14 +118,18 @@ class TranslationService implements TranslationServiceInterface
         string $key,
         string $lang
     ): ?AbstractTranslation {
-        return $this->repository->findOneBy(
-            [
-                "entityName" => $translatable->getEntityName(),
-                "entityId" => $translatable->getId(),
-                "lang" => $lang,
-                "key" => $key
-            ]
-        );
+        if (!in_array($lang, $this->langs)) {
+            throw new TranslatorLangException();
+        } else {
+            return $this->repository->findOneBy(
+                [
+                    "entityName" => $translatable->getEntityName(),
+                    "entityId" => $translatable->getId(),
+                    "lang" => $lang,
+                    "key" => $key
+                ]
+            );
+        }
     }
 
     /**
@@ -155,6 +174,8 @@ class TranslationService implements TranslationServiceInterface
      * @param Translatable $object
      * @param string $key
      * @param string $lang
+     *
+     * @throws TranslatorLangException
      *
      * @return bool
      */
@@ -206,6 +227,8 @@ class TranslationService implements TranslationServiceInterface
      * @param string $value
      * @param bool $flush
      *
+     * @throws TranslatorLangException
+     *
      * @return AbstractTranslation
      */
     public function edit(
@@ -252,6 +275,8 @@ class TranslationService implements TranslationServiceInterface
      * @param string $key
      * @param string $lang
      * @param bool $flush
+     *
+     * @throws TranslatorLangException
      *
      * @return bool
      */

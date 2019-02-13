@@ -221,7 +221,6 @@ class Translator implements TranslatorInterface
         return $translationGroup;
     }
 
-
     /**
      * setTranslations
      *
@@ -255,7 +254,7 @@ class Translator implements TranslatorInterface
                     false
                 );
             } elseif ($this->logger) {
-                $this->logger->info(sprintf("%s not in language list", $lang));
+                $this->logger->debug(sprintf("%s not in language list", $lang));
             }
         }
         if ($flush) {
@@ -287,11 +286,7 @@ class Translator implements TranslatorInterface
             $translation = $translationGroup->getKey($t->getKey());
             if ($translation) {
                 $setter = $t->getSetter();
-                if (method_exists($translatable, $setter)) {
-                    $translatable->$setter($translation->getValue());
-                } else {
-                    throw new TranslatableConfigurationException();
-                }
+                $translatable->$setter($translation->getValue());
             }
         }
         return $translatable;
@@ -317,8 +312,8 @@ class Translator implements TranslatorInterface
             if (in_array($lang, $this->langs)) {
                 $translatableClone = clone $translatable;
                 $translatables[$lang] = $this->translate($translatableClone, $lang);
-            } else {
-                $translatables[$lang] = null;
+            } elseif ($this->logger) {
+                $this->logger->debug(sprintf("%s not in language list", $lang));
             }
         }
         return $translatables;

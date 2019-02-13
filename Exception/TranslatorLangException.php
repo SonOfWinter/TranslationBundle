@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TranslatorConfigurationException
+ * TranslatorLangException
  *
  * PHP Version 7.1
  *
@@ -13,17 +13,17 @@
 namespace SOW\TranslationBundle\Exception;
 
 /**
- * Class TranslatorConfigurationException
+ * Class TranslatorLangException
  *
  * @package SOW\TranslationBundle\Exception
  */
-class TranslatorConfigurationException extends \Exception
+class TranslatorLangException extends \Exception
 {
     /**
-     * TranslatorConfigurationException constructor.
+     * TranslatorLangException constructor.
      *
-     * @param string          $message
-     * @param int             $code
+     * @param string $message
+     * @param int $code
      * @param \Throwable|null $previous
      */
     public function __construct(
@@ -32,7 +32,7 @@ class TranslatorConfigurationException extends \Exception
         \Throwable $previous = null
     ) {
         if ($message == "") {
-            $message = "The Translator is not configured";
+            $message = "Lang not in language list";
         }
         parent::__construct(
             $message,
