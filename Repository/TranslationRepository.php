@@ -49,10 +49,10 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t');
         $qb->from($this->_entityName, 't')
-            ->where('t.`entityName` : :entityName')
-            ->andWhere('t.`entityId` : :entityId')
-            ->andWhere('t.`lang` IN (:langs)')
-            ->orderBy('t.`key`', 'ASC')
+            ->where('t.entityName = :entityName')
+            ->andWhere('t.entityId = :entityId')
+            ->andWhere('t.lang IN (:langs)')
+            ->orderBy('t.key', 'ASC')
             ->setParameters(
                 [
                     "entityName" => $translatable->getEntityName(),
@@ -77,10 +77,10 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t');
         $qb->from($this->_entityName, 't')
-            ->where('t.`entityName` : :entityName')
-            ->andWhere('t.`lang` = :lang')
-            ->andWhere('t.`entityId` IN (:ids)')
-            ->orderBy('t.`entityId`', 'ASC')
+            ->where('t.entityName = :entityName')
+            ->andWhere('t.lang = :lang')
+            ->andWhere('t.entityId IN (:ids)')
+            ->orderBy('t.entityId', 'ASC')
             ->setParameters(
                 [
                     "entityName" => $entityName,
