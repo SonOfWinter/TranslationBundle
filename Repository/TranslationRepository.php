@@ -62,4 +62,33 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
             );
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * findAllByEntityNameAndLang
+     *
+     * @param string $entityName
+     * @param array $ids
+     * @param string $lang
+     *
+     * @return mixed
+     */
+    public function findAllByEntityNameAndLang(string $entityName, array $ids, string $lang)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t');
+        $qb->from($this->_entityName, 't')
+            ->where('t.`entityName` : :entityName')
+            ->andWhere('t.`lang` = :lang')
+            ->andWhere('t.`entityId` IN (:ids)')
+            ->orderBy('t.`entityId`', 'ASC')
+            ->setParameters(
+                [
+                    "entityName" => $entityName,
+                    "lang" => $lang,
+                    "ids" => $ids
+                ]
+            );
+        return $qb->getQuery()->getResult();
+    }
+
 }

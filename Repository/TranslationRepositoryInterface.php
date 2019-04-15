@@ -35,6 +35,17 @@ interface TranslationRepositoryInterface
     );
 
     /**
+     * findAllByEntityNameAndLang
+     *
+     * @param string $entityName
+     * @param array $ids
+     * @param string $lang
+     *
+     * @return mixed
+     */
+    public function findAllByEntityNameAndLang(string $entityName, array $ids, string $lang);
+
+    /**
      * findBy
      *
      * @param array $data

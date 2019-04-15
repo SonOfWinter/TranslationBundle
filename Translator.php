@@ -34,7 +34,7 @@ class Translator implements TranslatorInterface
     protected $logger;
 
     /**
-     * @var mixed
+     * @var string
      */
     protected $resource;
 
@@ -89,7 +89,11 @@ class Translator implements TranslatorInterface
      */
     public function setResource($resource)
     {
-        $this->resource = $resource;
+        if (is_string($resource)) {
+            $this->resource = $resource;
+        } else {
+            $this->resource = get_class($resource);
+        }
         $this->loadCollection();
     }
 
@@ -317,6 +321,57 @@ class Translator implements TranslatorInterface
             }
         }
         return $translatables;
+    }
+
+    /**
+     * translateAll
+     *
+     * @param string $entityName
+     * @param array $translatables
+     * @param string $lang
+     *
+     * @throws TranslatorConfigurationException
+     *
+     * @return array
+     */
+    public function translateAll(string $entityName, array $translatables, string $lang): array
+    {
+        if (empty($translatables)) {
+            return [];
+        }
+        $elem = $translatables[0];
+        $this->setResource($elem);
+        $collection = $this->getTranslationCollection();
+        $map = $this->translatableArrayToMap($translatables);
+        $translations = $this->translationService->findByEntityNameAndLang($entityName, array_keys($map), $lang);
+        /** @var \SOW\TranslationBundle\Entity\Translation $translation */
+        foreach ($translations as $translation) {
+            $id = $translation->getEntityId();
+            if (array_key_exists($id, $map)) {
+                $key = $translation->getKey();
+                $setter = $collection->get($key)->getSetter();
+                $map[$id]->$setter($translation->getValue());
+            }
+        }
+        return $map;
+    }
+
+    /**
+     * translatableArrayToMap
+     *
+     * @param array $translatables
+     *
+     * @return array
+     */
+    private function translatableArrayToMap(array $translatables): array
+    {
+        $map = [];
+        foreach ($translatables as $translatable) {
+            if ($translatable instanceof Translatable) {
+                $map[$translatable->getId()] = $translatable;
+            }
+        }
+        return $map;
     }
 
     /**

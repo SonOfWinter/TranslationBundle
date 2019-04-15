@@ -76,6 +76,17 @@ interface TranslationServiceInterface
     public function findByKey(string $key): array;
 
     /**
+     * findAllByEntityNameAndLang
+     *
+     * @param string $entityName
+     * @param array $ids
+     * @param string $lang
+     *
+     * @return array
+     */
+    public function findByEntityNameAndLang(string $entityName, array $ids, string $lang): array;
+
+    /**
      * checkTranslation
      *
      * @param Translatable $object

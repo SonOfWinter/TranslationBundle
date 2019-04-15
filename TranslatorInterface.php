@@ -165,6 +165,21 @@ interface TranslatorInterface
     public function translateForLangs(Translatable $translatable, array $langs): array;
 
     /**
+     * translateAll
+     * Set entities's properties with translations for lang
+     *
+     * @param string $entityName
+     * @param array $translatables
+     * @param string $lang
+     *
+     * @throws TranslatableConfigurationException
+     * @throws TranslatorConfigurationException
+     *
+     * @return array
+     */
+    public function translateAll(string $entityName, array $translatables, string $lang): array;
+
+    /**
      * remove
      * delete a translation
      *

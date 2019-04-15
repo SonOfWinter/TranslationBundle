@@ -159,13 +159,26 @@ class TranslationService implements TranslationServiceInterface
      */
     public function findByKey(string $key): array
     {
-        $translations = $this->repository->findBy(
+        return $this->repository->findBy(
             [
                 'key' => $key
             ],
             ["lang" => "ASC"]
         );
-        return $translations;
+    }
+
+    /**
+     * findAllByEntityNameAndLang
+     *
+     * @param string $entityName
+     * @param array $ids
+     * @param string $lang
+     *
+     * @return array
+     */
+    public function findByEntityNameAndLang(string $entityName, array $ids, string $lang): array
+    {
+        return $this->repository->findAllByEntityNameAndLang($entityName, $ids, $lang);
     }
 
     /**

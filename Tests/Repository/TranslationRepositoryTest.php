@@ -39,12 +39,20 @@ class TranslationRepositoryTest extends WebTestCase
      */
     protected $translation;
 
+    /**
+     * @var AbstractTranslation
+     */
+    protected $translation2;
+
     public function setUp()
     {
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->translation = $this->getMockBuilder(AbstractTranslation::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->translation2 = $this->getMockBuilder(AbstractTranslation::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -197,5 +205,52 @@ class TranslationRepositoryTest extends WebTestCase
         $this->assertTrue($repository instanceof TranslationRepository);
         $result = $repository->findAllByObjectAndLangs($testObject, ['fr']);
         $this->assertEquals($result, [$this->translation]);
+    }
+
+    public function testFindAllByEntityNameAndLang()
+    {
+        $translations = [$this->translation,$this->translation2];
+        $query = $this->getMockBuilder(AbstractQuery::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $query->expects($this->once())
+            ->method('getResult')
+            ->will($this->returnValue($translations));
+
+        $queryBuilder = $this->getMockBuilder(QueryBuilder::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $queryBuilder->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($queryBuilder));
+        $queryBuilder->expects($this->once())
+            ->method('from')
+            ->will($this->returnValue($queryBuilder));
+        $queryBuilder->expects($this->once())
+            ->method('where')
+            ->will($this->returnValue($queryBuilder));
+        $queryBuilder->expects($this->exactly(2))
+            ->method('andWhere')
+            ->will($this->returnValue($queryBuilder));
+        $queryBuilder->expects($this->once())
+            ->method('orderBy')
+            ->will($this->returnValue($queryBuilder));
+        $queryBuilder->expects($this->once())
+            ->method('setParameters')
+            ->will($this->returnValue($queryBuilder));
+        $queryBuilder->expects($this->once())
+            ->method('getQuery')
+            ->will($this->returnValue($query));
+
+        $this->em->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($queryBuilder));
+
+        $repository = new TranslationRepository($this->em, AbstractTranslation::class);
+        $this->assertTrue($repository instanceof TranslationRepository);
+
+        $result = $repository->findAllByEntityNameAndLang('TestObject', ['1'], 'fr');
+        $this->assertEquals($translations, $result);
     }
 }

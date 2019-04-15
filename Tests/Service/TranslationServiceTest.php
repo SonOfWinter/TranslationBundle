@@ -133,6 +133,17 @@ class TranslationServiceTest extends WebTestCase
         $this->assertEquals($result, [$this->translation]);
     }
 
+    public function testfindByEntityNameAndLang()
+    {
+        $this->repository->expects($this->once())
+            ->method('findAllByEntityNameAndLang')
+            ->will($this->returnValue([$this->translation]));
+        $service = new TranslationService($this->em, $this->repository, Translation::class, $this->langs);
+        $this->assertTrue($service instanceof TranslationService);
+        $result = $service->findByEntityNameAndLang('TestObject', [$this->testObject->getId()], 'fr');
+        $this->assertEquals($result, [$this->translation]);
+    }
+
     public function testCheckTranslationWithTranslation()
     {
         $this->repository->expects($this->once())

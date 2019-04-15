@@ -6,11 +6,11 @@ use SOW\TranslationBundle\Annotation as Translation;
 use SOW\TranslationBundle\Entity\Translatable;
 
 /**
- * Class TestObjectTwo
+ * Class TestObjectThree
  *
  * @package SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses
  */
-class TestObjectTwo extends AbstractClass implements Translatable
+class TestObjectThree extends AbstractClass implements Translatable
 {
     /**
      * @var string
@@ -20,7 +20,7 @@ class TestObjectTwo extends AbstractClass implements Translatable
 
     /**
      * @var string
-     * @Translation\Translation(key="lastname")
+     * @Translation\Translation(key="lastname", setter="setOtherName")
      */
     private $lastname;
 
@@ -38,7 +38,11 @@ class TestObjectTwo extends AbstractClass implements Translatable
     }
 
     /**
+     * setFirstname
+     *
      * @param string $firstname
+     *
+     * @return TestObjectThree
      */
     public function setFirstname(string $firstname): self
     {
@@ -55,15 +59,11 @@ class TestObjectTwo extends AbstractClass implements Translatable
     }
 
     /**
-     * Setter for lastname
-     *
-     * @param string $lastname
-     *
-     * @return self
+     * @param string $othername
      */
-    public function setLastname(string $lastname): self
+    public function setOtherName(string $othername): self
     {
-        $this->lastname = $lastname;
+        $this->lastname = $othername;
         return $this;
     }
 
@@ -95,7 +95,7 @@ class TestObjectTwo extends AbstractClass implements Translatable
      */
     public function getEntityName(): string
     {
-        return self::class;
+        return TestObject::class;
     }
 
     /**
@@ -103,6 +103,6 @@ class TestObjectTwo extends AbstractClass implements Translatable
      */
     public function getId(): string
     {
-        return '2';
+        return '3';
     }
 }
