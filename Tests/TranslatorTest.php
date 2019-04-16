@@ -211,14 +211,23 @@ class TranslatorTest extends TestCase
             ->setKey("lastname")
             ->setEntityName($this->testObject->getEntityName())
             ->setLang('fr');
+        $translationOther = new Translation();
+        $translationOther->setValue('other value')
+            ->setEntityId($this->testObject->getId())
+            ->setKey("other")
+            ->setEntityName($this->testObject->getEntityName())
+            ->setLang('fr');
         $this->translationService->expects($this->once())
             ->method('findAllForObjectWithLang')
-            ->will($this->returnValue([$translationFirstName, $translationLastName]));
+            ->will($this->returnValue([$translationFirstName, $translationLastName, $translationOther]));
         $translator = new Translator($this->translationService, $this->loader, $this->langs, $this->logger);
         $translator->setResource(get_class($this->testObject));
         $translator->translate($this->testObject, 'fr');
         $this->assertEquals($this->testObject->getFirstname(), 'new FirstName');
         $this->assertEquals($this->testObject->getLastname(), 'new LastName');
+        $this->assertCount(1, $this->testObject->getOtherTranslations());
+        $this->assertTrue(array_key_exists('other', $this->testObject->getOtherTranslations()));
+        $this->assertEquals($this->testObject->getOtherTranslations()['other'], 'other value');
     }
 
     /**
@@ -295,24 +304,13 @@ class TranslatorTest extends TestCase
             ->setKey("lastname")
             ->setEntityName($this->testObject->getEntityName())
             ->setLang('fr');
-        $translationFirstNameEn = new Translation();
-        $translationFirstNameEn->setValue('new FirstName')
+
+        $translationOtherFr = new Translation();
+        $translationOtherFr->setValue('other value')
             ->setEntityId($this->testObject->getId())
-            ->setKey("firstname")
+            ->setKey("other")
             ->setEntityName($this->testObject->getEntityName())
-            ->setLang('en');
-        $translationLastNameEn = new Translation();
-        $translationLastNameEn->setValue('new LastName')
-            ->setEntityId($this->testObject->getId())
-            ->setKey("lastname")
-            ->setEntityName($this->testObject->getEntityName())
-            ->setLang('en');
-        $fakeTranslationLastNameEn = new Translation();
-        $fakeTranslationLastNameEn->setValue('new fake LastName')
-            ->setEntityId('2')
-            ->setKey("lastname")
-            ->setEntityName($this->testObject->getEntityName())
-            ->setLang('en');
+            ->setLang('fr');
 
         $translationFirstNameFr3 = new Translation();
         $translationFirstNameFr3->setValue('nouveau prénom3')
@@ -326,18 +324,7 @@ class TranslatorTest extends TestCase
             ->setKey("lastname")
             ->setEntityName($testObjectThree->getEntityName())
             ->setLang('fr');
-        $translationFirstNameEn3 = new Translation();
-        $translationFirstNameEn3->setValue('new FirstName3')
-            ->setEntityId($testObjectThree->getId())
-            ->setKey("firstname")
-            ->setEntityName($testObjectThree->getEntityName())
-            ->setLang('en');
-        $translationLastNameEn3 = new Translation();
-        $translationLastNameEn3->setValue('new LastName3')
-            ->setEntityId($testObjectThree->getId())
-            ->setKey("lastname")
-            ->setEntityName($testObjectThree->getEntityName())
-            ->setLang('en');
+
         
         $this->translationService->expects($this->once())
             ->method('findByEntityNameAndLang')
@@ -346,13 +333,9 @@ class TranslatorTest extends TestCase
                     [
                         $translationFirstNameFr,
                         $translationLastNameFr,
-                        $translationFirstNameEn,
-                        $translationLastNameEn,
-                        $fakeTranslationLastNameEn,
+                        $translationOtherFr,
                         $translationFirstNameFr3,
-                        $translationLastNameFr3,
-                        $translationFirstNameEn3,
-                        $translationLastNameEn3
+                        $translationLastNameFr3
                     ]
                 )
             );
@@ -364,10 +347,16 @@ class TranslatorTest extends TestCase
         $this->assertCount(2, $result);
         $this->assertTrue(array_key_exists($this->testObject->getId(), $result));
         $this->assertTrue(array_key_exists($testObjectThree->getId(), $result));
-        $this->assertEquals($result[$this->testObject->getId()]->getFirstname(), 'new FirstName');
-        $this->assertEquals($result[$this->testObject->getId()]->getLastname(), 'new LastName');
-        $this->assertEquals($result[$testObjectThree->getId()]->getFirstname(), 'new FirstName3');
-        $this->assertEquals($result[$testObjectThree->getId()]->getLastname(), 'new LastName3');
+        $objWithTranslation = $result[$this->testObject->getId()];
+
+        $this->assertEquals($objWithTranslation->getFirstname(), 'nouveau prénom');
+        $this->assertEquals($objWithTranslation->getLastname(), 'nouveau nom');
+        $this->assertCount(1, $objWithTranslation->getOtherTranslations());
+        $this->assertTrue(array_key_exists('other', $objWithTranslation->getOtherTranslations()));
+        $this->assertEquals($objWithTranslation->getOtherTranslations()['other'], 'other value');
+
+        $this->assertEquals($result[$testObjectThree->getId()]->getFirstname(), 'nouveau prénom3');
+        $this->assertEquals($result[$testObjectThree->getId()]->getLastname(), 'nouveau nom3');
     }
 
     public function testRemoveWithFlush()

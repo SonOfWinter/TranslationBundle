@@ -286,11 +286,14 @@ class Translator implements TranslatorInterface
         }
         $translationGroup = $this->getTranslationGroupForLang($translatable, $lang);
         $collection = $this->getTranslationCollection();
-        foreach ($collection as $t) {
-            $translation = $translationGroup->getKey($t->getKey());
-            if ($translation) {
+        foreach ($translationGroup->getTranslations() as $translation) {
+            $key = $translation->getKey();
+            $t = $collection->get($key);
+            if ($t !== null) {
                 $setter = $t->getSetter();
                 $translatable->$setter($translation->getValue());
+            } else {
+                $translatable->setOtherTranslation($key, $translation->getValue());
             }
         }
         return $translatable;
@@ -349,8 +352,13 @@ class Translator implements TranslatorInterface
             $id = $translation->getEntityId();
             if (array_key_exists($id, $map)) {
                 $key = $translation->getKey();
-                $setter = $collection->get($key)->getSetter();
-                $map[$id]->$setter($translation->getValue());
+                $t = $collection->get($key);
+                if ($t !== null) {
+                    $setter = $collection->get($key)->getSetter();
+                    $map[$id]->$setter($translation->getValue());
+                } else {
+                    $map[$id]->setOtherTranslation($key, $translation->getValue());
+                }
             }
         }
         return $map;

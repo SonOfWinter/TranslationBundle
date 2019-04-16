@@ -4,6 +4,7 @@ namespace SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses;
 
 use SOW\TranslationBundle\Annotation as Translation;
 use SOW\TranslationBundle\Entity\Translatable;
+use SOW\TranslationBundle\Entity\TranslatableOtherTranslationsTrait;
 
 /**
  * Class WrongTestObject
@@ -12,14 +13,18 @@ use SOW\TranslationBundle\Entity\Translatable;
  */
 class WrongTestObject extends AbstractClass implements Translatable
 {
+    use TranslatableOtherTranslationsTrait;
+
     /**
      * @var string
+     *
      * @Translation\Translation(key="firstname")
      */
     private $firstname;
 
     /**
      * @var string
+     *
      * @Translation\Translation(key="lastname", setter="setSomeThing")
      */
     private $lastname;
@@ -30,6 +35,8 @@ class WrongTestObject extends AbstractClass implements Translatable
     private $notTranslatedProperty;
 
     /**
+     * getFirstname
+     *
      * @return string
      */
     public function getFirstname()
@@ -38,7 +45,11 @@ class WrongTestObject extends AbstractClass implements Translatable
     }
 
     /**
+     * setFirstname
+     *
      * @param string $firstname
+     *
+     * @return WrongTestObject
      */
     public function setFirstname(string $firstname): self
     {
@@ -47,6 +58,8 @@ class WrongTestObject extends AbstractClass implements Translatable
     }
 
     /**
+     * getLastname
+     *
      * @return string
      */
     public function getLastname()
@@ -55,7 +68,11 @@ class WrongTestObject extends AbstractClass implements Translatable
     }
 
     /**
+     * setOtherName
+     *
      * @param string $othername
+     *
+     * @return WrongTestObject
      */
     public function setOtherName(string $othername): self
     {
@@ -87,6 +104,8 @@ class WrongTestObject extends AbstractClass implements Translatable
     }
 
     /**
+     * getEntityName
+     *
      * @return string
      */
     public function getEntityName(): string
@@ -95,6 +114,8 @@ class WrongTestObject extends AbstractClass implements Translatable
     }
 
     /**
+     * getId
+     *
      * @return string
      */
     public function getId(): string
