@@ -121,7 +121,6 @@ class TranslationCollection implements \IteratorAggregate, \Countable
             unset($this->translations[$key]);
             $this->translations[$key] = $translation;
         }
-
         foreach ($collection->getResources() as $resource) {
             $this->addResource($resource);
         }

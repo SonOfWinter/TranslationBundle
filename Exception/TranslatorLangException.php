@@ -34,10 +34,6 @@ class TranslatorLangException extends \Exception
         if ($message == "") {
             $message = "Lang not in language list";
         }
-        parent::__construct(
-            $message,
-            $code,
-            $previous
-        );
+        parent::__construct($message, $code, $previous);
     }
 }

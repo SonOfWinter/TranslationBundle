@@ -85,10 +85,8 @@ class TranslationService implements TranslationServiceInterface
      *
      * @return array
      */
-    public function findAllForObjectWithLang(
-        Translatable $translatable,
-        string $lang
-    ) {
+    public function findAllForObjectWithLang(Translatable $translatable, string $lang)
+    {
         if (!in_array($lang, $this->langs)) {
             throw new TranslatorLangException();
         } else {
@@ -159,12 +157,7 @@ class TranslationService implements TranslationServiceInterface
      */
     public function findByKey(string $key): array
     {
-        return $this->repository->findBy(
-            [
-                'key' => $key
-            ],
-            ["lang" => "ASC"]
-        );
+        return $this->repository->findBy(['key' => $key], ["lang" => "ASC"]);
     }
 
     /**

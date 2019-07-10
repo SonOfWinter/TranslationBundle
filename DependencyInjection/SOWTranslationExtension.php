@@ -40,14 +40,8 @@ class SOWTranslationExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = $this->getConfiguration(
-            $configs,
-            $container
-        );
-        $this->processConfiguration(
-            $configuration,
-            $configs
-        );
+        $configuration = $this->getConfiguration($configs, $container);
+        $this->processConfiguration($configuration, $configs);
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config')

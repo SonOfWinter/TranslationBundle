@@ -37,10 +37,7 @@ interface TranslationServiceInterface
      *
      * @return mixed
      */
-    public function findAllForObjectWithLang(
-        Translatable $translatable,
-        string $lang
-    );
+    public function findAllForObjectWithLang(Translatable $translatable, string $lang);
 
     /**
      * findOneForObjectWithLang
@@ -51,11 +48,7 @@ interface TranslationServiceInterface
      *
      * @return mixed
      */
-    public function findOneForObjectWithLang(
-        Translatable $translatable,
-        string $key,
-        string $lang
-    );
+    public function findOneForObjectWithLang(Translatable $translatable, string $key, string $lang);
 
     /**
      * findAllForObject

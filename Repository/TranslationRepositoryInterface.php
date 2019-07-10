@@ -29,10 +29,7 @@ interface TranslationRepositoryInterface
      *
      * @return mixed
      */
-    public function findAllByObjectAndLangs(
-        Translatable $translatable,
-        array $langs
-    );
+    public function findAllByObjectAndLangs(Translatable $translatable, array $langs);
 
     /**
      * findAllByEntityNameAndLang

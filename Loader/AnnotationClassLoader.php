@@ -93,6 +93,7 @@ class AnnotationClassLoader implements LoaderInterface
         }
         $collection = new TranslationCollection();
         $collection->addResource(new FileResource($class->getFileName()));
+        $methods = [];
         foreach ($class->getMethods() as $reflectionMethod) {
             $methods[] = $reflectionMethod->getName();
         }
