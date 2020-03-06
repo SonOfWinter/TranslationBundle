@@ -7,3 +7,4 @@ symfony.lock
 .phpunit
 /phpunit.xml
 .DS_Store
+/.phpunit.result.cache

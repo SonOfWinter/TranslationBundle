@@ -36,7 +36,7 @@ class AnnotationClassLoaderTest extends TestCase
 
     private $translationAnnotationClass = 'SOW\\TranslationBundle\\Annotation\\Translation';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->reader = new AnnotationReader();
@@ -85,19 +85,15 @@ class AnnotationClassLoaderTest extends TestCase
 
     # load
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testLoadWrongClass()
     {
+        static::expectException('\InvalidArgumentException');
         $this->loader->load('WrongClass');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testLoadAbstractClass()
     {
+        static::expectException('\InvalidArgumentException');
         $this->loader->load(
             'SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\AbstractClass'
         );
@@ -130,17 +126,11 @@ class AnnotationClassLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testGetResolverDoesNothing()
     {
         $this->assertTrue(empty($this->loader->getResolver()));
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testSetResolverDoesNothing()
     {
         $lri = $this->createMock(LoaderResolverInterface::class);

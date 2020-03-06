@@ -13,9 +13,8 @@ namespace SOW\TranslationBundle\Tests\DependencyInjection;
 
 use SOW\TranslationBundle\DependencyInjection\Configuration;
 use SOW\TranslationBundle\DependencyInjection\SOWTranslationExtension;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Class SOWTranslationExtensionTest

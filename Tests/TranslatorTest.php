@@ -48,7 +48,7 @@ class TranslatorTest extends TestCase
 
     private $langs = ['fr', 'en'];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
         $reader = new AnnotationReader();
@@ -66,12 +66,10 @@ class TranslatorTest extends TestCase
             ->getMockForAbstractClass();
     }
 
-    /**
-     * @expectedException SOW\TranslationBundle\Exception\TranslatorConfigurationException
-     * @expectedExceptionMessage The Translator is not configured
-     */
     public function testGetCollectionWithoutResource()
     {
+        static::expectException('SOW\TranslationBundle\Exception\TranslatorConfigurationException');
+        static::expectExceptionMessage('The Translator is not configured');
         $translator = new Translator($this->translationService, $this->loader, $this->langs, $this->logger);
         $this->assertTrue($translator instanceof Translator);
         $translator->getTranslationCollection();
@@ -230,12 +228,10 @@ class TranslatorTest extends TestCase
         $this->assertEquals($this->testObject->getOtherTranslations()['other'], 'other value');
     }
 
-    /**
-     * @expectedException SOW\TranslationBundle\Exception\TranslatableConfigurationException
-     * @expectedExceptionMessage The Entity is misconfigured
-     */
     public function testTranslateWithResourceAndWrongSetter()
     {
+        static::expectException('SOW\TranslationBundle\Exception\TranslatableConfigurationException');
+        static::expectExceptionMessage('The Entity is misconfigured');
         $translationFirstName = new Translation();
         $translationFirstName->setValue('new FirstName')
             ->setEntityId($this->testObject->getId())
@@ -277,12 +273,10 @@ class TranslatorTest extends TestCase
         $this->assertEquals($this->testObject->getLastname(), 'new LastName');
     }
 
-    /**
-     * @expectedException SOW\TranslationBundle\Exception\TranslatableConfigurationException
-     * @expectedExceptionMessage The Entity is misconfigured
-     */
     public function testTranslateWithMisconfiguredObject()
     {
+        static::expectException('SOW\TranslationBundle\Exception\TranslatableConfigurationException');
+        static::expectExceptionMessage('The Entity is misconfigured');
         $wrongObject = new WrongTestObject();
         $translator = new Translator($this->translationService, $this->loader, $this->langs, $this->logger);
         $translator->translate($wrongObject, 'fr');

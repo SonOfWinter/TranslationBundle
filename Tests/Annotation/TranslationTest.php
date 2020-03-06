@@ -22,11 +22,9 @@ use SOW\TranslationBundle\Annotation\Translation;
  */
 class TranslationTest extends TestCase
 {
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testInvalidRouteParameter()
     {
+        static::expectException('\BadMethodCallException');
         new Translation(['foo' => 'bar']);
     }
 

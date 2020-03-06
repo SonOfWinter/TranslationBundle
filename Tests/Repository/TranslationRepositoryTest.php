@@ -14,11 +14,9 @@ namespace SOW\TranslationBundle\Tests\Service;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use SOW\TranslationBundle\Entity\AbstractTranslation;
 use SOW\TranslationBundle\Repository\TranslationRepository;
-use SOW\TranslationBundle\Service\TranslationService;
 use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -44,7 +42,7 @@ class TranslationRepositoryTest extends WebTestCase
      */
     protected $translation2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)
             ->disableOriginalConstructor()

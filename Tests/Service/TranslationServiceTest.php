@@ -49,7 +49,7 @@ class TranslationServiceTest extends WebTestCase
     
     private $langs = ['fr', 'en'];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)
             ->disableOriginalConstructor()
@@ -74,12 +74,10 @@ class TranslationServiceTest extends WebTestCase
         $this->assertEquals($result, [$this->translation]);
     }
 
-    /**
-     * @expectedException SOW\TranslationBundle\Exception\TranslatorLangException
-     * @expectedExceptionMessage Lang not in language list
-     */
     public function testFindAllForObjectWithWrongLang()
     {
+        static::expectException('SOW\TranslationBundle\Exception\TranslatorLangException');
+        static::expectExceptionMessage('Lang not in language list');
         $this->repository->expects($this->never())
             ->method('findBy');
         $service = new TranslationService($this->em, $this->repository, Translation::class, $this->langs);
@@ -98,12 +96,10 @@ class TranslationServiceTest extends WebTestCase
         $this->assertEquals($result, $this->translation);
     }
 
-    /**
-     * @expectedException SOW\TranslationBundle\Exception\TranslatorLangException
-     * @expectedExceptionMessage Lang not in language list
-     */
     public function testFindOneForObjectWithWrongLang()
     {
+        static::expectException('SOW\TranslationBundle\Exception\TranslatorLangException');
+        static::expectExceptionMessage('Lang not in language list');
         $this->repository->expects($this->never())
             ->method('findOneBy');
         $service = new TranslationService($this->em, $this->repository, Translation::class, $this->langs);
