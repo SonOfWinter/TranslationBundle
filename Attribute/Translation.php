@@ -1,57 +1,41 @@
 <?php
-
 /**
- * Translation annotation class
+ * Translation attribute class
  *
- * @package  SOW\TranslationBundle\Annotation
+ * @package  SOW\TranslationBundle\Attribute
  * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
  * @link     https://github.com/SonOfWinter/TranslationBundle
  */
 
-namespace SOW\TranslationBundle\Annotation;
+namespace SOW\TranslationBundle\Attribute;
+
+use Attribute;
 
 /**
  * Class Translation
  *
- * @package SOW\TranslationBundle\Annotation
- *
- * @Annotation
- *
- * @Target("PROPERTY")
+ * @package SOW\TranslationBundle\Attribute
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Translation
 {
-    /**
-     * @var string
-     */
-    public $key;
+    public string $key;
 
-    /**
-     * @var string
-     */
-    public $setter;
+    public string $setter;
 
     /**
      * Translation constructor.
      *
-     * @param array $data
-     *
-     * @throws \BadMethodCallException
+     * @param string $key
+     * @param string|null $setter
      */
-    public function __construct(array $data)
+    public function __construct(string $key, ?string $setter = null)
     {
-        foreach ($data as $key => $value) {
-            $noUnderscoreKey = str_replace('_', '', $key);
-            $method = 'set' . $noUnderscoreKey;
-            if (!method_exists($this, $method)) {
-                $message = sprintf(
-                    'Unknown property "%s" on annotation "%s".',
-                    $key,
-                    get_class($this)
-                );
-                throw new \BadMethodCallException($message);
-            }
-            $this->$method($value);
+        $this->key = $key;
+        if ($setter) {
+            $this->setter = $setter;
+        } else {
+            $this->setter = 'set' . ucwords($key);
         }
     }
 

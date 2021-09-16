@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AnnotationClassLoader test
+ * AttributeClassLoader test
  *
  * @package  SOW\TranslationBundle\Tests\Loader
  * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
@@ -10,35 +10,25 @@
 
 namespace SOW\TranslationBundle\Tests\Loader;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use SOW\TranslationBundle\Loader\AnnotationClassLoader;
+use SOW\TranslationBundle\Loader\AttributeClassLoader;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 /**
- * Class AnnotationClassLoaderTest
+ * Class AttributeClassLoaderTest
  *
  * @package SOW\TranslationBundle\Tests\Loader
  */
-class AnnotationClassLoaderTest extends TestCase
+class AttributeClassLoaderTest extends TestCase
 {
-    /**
-     * @var AnnotationReader
-     */
-    private $reader;
+    private AttributeClassLoader $loader;
 
-    /**
-     * @var AnnotationClassLoader
-     */
-    private $loader;
-
-    private $translationAnnotationClass = 'SOW\\TranslationBundle\\Annotation\\Translation';
+    private $translationAttributeClass = 'SOW\\TranslationBundle\\Attribute\\Translation';
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->reader = new AnnotationReader();
-        $this->loader = $this->getClassLoader($this->reader);
+        $this->loader = $this->getClassLoader();
     }
 
     protected function setObjectAttribute($object, $attributeName, $value)
@@ -52,28 +42,22 @@ class AnnotationClassLoaderTest extends TestCase
         );
     }
 
-    public function getReader()
-    {
-        return $this->getMockBuilder('Doctrine\Common\Annotations\Reader')
-            ->disableOriginalConstructor()->getMock();
-    }
-
-    public function getClassLoader($reader)
+    public function getClassLoader()
     {
         return $this->getMockBuilder(
-            'SOW\TranslationBundle\Loader\AnnotationClassLoader'
-        )->setConstructorArgs([$reader, $this->translationAnnotationClass])
+            'SOW\TranslationBundle\Loader\AttributeClassLoader'
+        )->setConstructorArgs([$this->translationAttributeClass])
             ->getMockForAbstractClass();
     }
 
-    # setTranslationAnnotationClass
+    # setTranslationAttributeClass
 
-    public function testChangeAnnotationClass()
+    public function testChangeAttributeClass()
     {
-        $newClass = 'SOW\\TranslationBundle\\Tests\\Fixtures\\AnnotatedClasses\\TestObject';
-        $this->loader->setTranslationAnnotationClass($newClass);
+        $newClass = 'SOW\\TranslationBundle\\Tests\\Fixtures\\AttributedClasses\\TestAttributeObject';
+        $this->loader->setTranslationAttributeClass($newClass);
         $reflection = new \ReflectionObject($this->loader);
-        $property = $reflection->getProperty('translationAnnotationClass');
+        $property = $reflection->getProperty('translationAttributeClass');
         $property->setAccessible(true);
         $this->assertEquals(
             $newClass,
@@ -93,14 +77,14 @@ class AnnotationClassLoaderTest extends TestCase
     {
         static::expectException('\InvalidArgumentException');
         $this->loader->load(
-            'SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\AbstractClass'
+            'SOW\TranslationBundle\Tests\Fixtures\AttributedClasses\AbstractClass'
         );
     }
 
     public function testLoadClass()
     {
         $collection = $this->loader->load(
-            'SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject'
+            'SOW\TranslationBundle\Tests\Fixtures\AttributedClasses\TestAttributeObject'
         );
         $this->assertEquals(
             2,
@@ -113,7 +97,7 @@ class AnnotationClassLoaderTest extends TestCase
         $this->assertTrue(
             $this->loader->supports(
                 'class',
-                'annotation'
+                'attribute'
             )
         );
         $this->assertFalse(

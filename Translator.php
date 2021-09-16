@@ -3,8 +3,6 @@
 /**
  * Translator
  *
- * PHP Version 7.1
- *
  * @package  SOW\TranslationBundle
  * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
  * @link     https://github.com/SonOfWinter/TranslationBundle
@@ -12,6 +10,7 @@
 
 namespace SOW\TranslationBundle;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use SOW\TranslationBundle\Entity\Translatable;
 use SOW\TranslationBundle\Entity\AbstractTranslation;
@@ -28,52 +27,49 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class Translator implements TranslatorInterface
 {
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger;
+    public const METHOD_ANNOTATION = "annotation";
+    public const METHOD_ATTRIBUTE = "attribute";
 
-    /**
-     * @var string
-     */
-    protected $resource;
+    protected ?string $resource = null;
 
-    /**
-     * @var LoaderInterface
-     */
-    protected $loader;
+    protected LoaderInterface $loader;
 
-    /**
-     * @var TranslationCollection|null
-     */
-    protected $collection;
+    protected TranslationServiceInterface $translationService;
 
-    /**
-     * @var TranslationServiceInterface
-     */
-    protected $translationService;
+    protected array $langs;
 
-    /**
-     * @var array
-     */
-    protected $langs;
+    protected ?LoggerInterface $logger = null;
+
+    protected ?TranslationCollection $collection = null;
 
     /**
      * Translator constructor.
      *
      * @param TranslationServiceInterface $translationService
-     * @param LoaderInterface $loader
+     * @param LoaderInterface $annotationLoader
+     * @param LoaderInterface $attributeLoader
      * @param array $langs
+     * @param string $translationMethod
      * @param null|LoggerInterface $logger
+     *
+     * @throws TranslatorConfigurationException
      */
     public function __construct(
         TranslationServiceInterface $translationService,
-        LoaderInterface $loader,
+        LoaderInterface $annotationLoader,
+        LoaderInterface $attributeLoader,
         array $langs,
+        string $translationMethod,
         ?LoggerInterface $logger = null
     ) {
         $this->translationService = $translationService;
-        $this->loader = $loader;
+        if ($translationMethod === self::METHOD_ATTRIBUTE) {
+            $this->loader = $attributeLoader;
+        } elseif ($translationMethod === self::METHOD_ANNOTATION) {
+            $this->loader = $annotationLoader;
+        } else {
+            throw new TranslatorConfigurationException("Wrong translator method");
+        }
         $this->langs = $langs;
         $this->logger = $logger;
     }
@@ -83,7 +79,7 @@ class Translator implements TranslatorInterface
      *
      * @param $resource
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return void
      */
@@ -116,7 +112,7 @@ class Translator implements TranslatorInterface
      * Get TranslationCollection for a resource
      *
      * @throws TranslatorConfigurationException
-     * @throws \Exception
+     * @throws Exception
      *
      * @return TranslationCollection
      */
@@ -131,7 +127,7 @@ class Translator implements TranslatorInterface
     /**
      * loadCollection
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return TranslationCollection|null
      */

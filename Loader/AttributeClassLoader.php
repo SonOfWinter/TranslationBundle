@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Annotation class loader
+ * Attribute class loader
  *
  * @package  SOW\TranslationBundle\Loader
  * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
@@ -15,56 +14,41 @@ use SOW\TranslationBundle\Translation;
 use SOW\TranslationBundle\TranslationCollection;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
-use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
- * Class AnnotationClassLoader
+ * Class AttributeClassLoader
  *
  * @package SOW\TranslationBundle\Loader
  */
-class AnnotationClassLoader implements LoaderInterface
+class AttributeClassLoader implements LoaderInterface
 {
-    /**
-     * Reader for annotation
-     *
-     * @var Reader
-     */
-    protected $reader;
+    protected string $translationAttributeClass;
 
     /**
-     * Annotation class name
+     * AttributeClassLoader constructor.
      *
-     * @var string
+     * @param $translationAttributeClass
      */
-    protected $translationAnnotationClass;
-
-    /**
-     * AnnotationClassLoader constructor.
-     *
-     * @param Reader $reader
-     * @param        $translationAnnotationClass
-     */
-    public function __construct(Reader $reader, $translationAnnotationClass)
+    public function __construct($translationAttributeClass)
     {
-        $this->reader = $reader;
-        $this->translationAnnotationClass = $translationAnnotationClass;
+        $this->translationAttributeClass = $translationAttributeClass;
     }
 
     /**
-     * Sets the annotation class to read translation properties from.
+     * Sets the attribute class to read translation properties from.
      *
-     * @param $class
+     * @param string $class
      *
      * @return void
      */
-    public function setTranslationAnnotationClass($class)
+    public function setTranslationAttributeClass(string $class)
     {
-        $this->translationAnnotationClass = $class;
+        $this->translationAttributeClass = $class;
     }
 
     /**
-     * Load annotations from class
+     * Load attributes from class
      *
      * @param mixed $class
      * @param null $type
@@ -72,7 +56,6 @@ class AnnotationClassLoader implements LoaderInterface
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
      * @throws TranslatableConfigurationException
-     *
      * @return TranslationCollection
      */
     public function load($class, $type = null): TranslationCollection
@@ -84,7 +67,7 @@ class AnnotationClassLoader implements LoaderInterface
         if ($class->isAbstract()) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'Annotations from class "%s" cannot be read as it is abstract.',
+                    'Attributes from class "%s" cannot be read as it is abstract.',
                     $class->getName()
                 )
             );
@@ -96,11 +79,13 @@ class AnnotationClassLoader implements LoaderInterface
             $methods[] = $reflectionMethod->getName();
         }
         foreach ($class->getProperties() as $property) {
-            foreach ($this->reader->getPropertyAnnotations($property) as $annot) {
-                if ($annot instanceof $this->translationAnnotationClass) {
+            $attributes = $property->getAttributes($this->translationAttributeClass);
+            foreach ($attributes as $attribute) {
+                $listener = $attribute->newInstance();
+                if (get_class($listener) === $this->translationAttributeClass) {
                     $this->addTranslation(
                         $collection,
-                        $annot,
+                        $listener,
                         $methods,
                         $property
                     );
@@ -114,24 +99,23 @@ class AnnotationClassLoader implements LoaderInterface
      * Add translation class to TranslationCollection
      *
      * @param TranslationCollection $collection
-     * @param \SOW\TranslationBundle\Annotation\Translation $annot
+     * @param \SOW\TranslationBundle\Attribute\Translation $attribute
      * @param array $methods
      * @param \ReflectionProperty $property
      *
      * @throws TranslatableConfigurationException
-     *
      * @return void
      */
     protected function addTranslation(
         TranslationCollection $collection,
-        \SOW\TranslationBundle\Annotation\Translation $annot,
+        \SOW\TranslationBundle\Attribute\Translation $attribute,
         array $methods,
         \ReflectionProperty $property
     ) {
         $propertyName = $property->getName();
-        $method = $annot->getSetter() ?? 'set' . ucfirst($propertyName);
+        $method = $attribute->getSetter() ?? 'set' . ucfirst($propertyName);
         if (in_array($method, $methods)) {
-            $translation = new Translation($annot->getKey() ?? $propertyName, $method);
+            $translation = new Translation($attribute->getKey() ?? $propertyName, $method);
             $collection->add($translation);
         } else {
             throw new TranslatableConfigurationException();
@@ -150,7 +134,7 @@ class AnnotationClassLoader implements LoaderInterface
     {
         return is_string($resource)
             && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource)
-            && (!$type || 'annotation' === $type);
+            && (!$type || 'attribute' === $type);
     }
 
     /**

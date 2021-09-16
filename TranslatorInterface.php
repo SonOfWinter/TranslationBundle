@@ -3,8 +3,6 @@
 /**
  * Translator Interface
  *
- * PHP Version 7.1
- *
  * @package  SOW\TranslationBundle
  * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
  * @link     https://github.com/SonOfWinter/TranslationBundle

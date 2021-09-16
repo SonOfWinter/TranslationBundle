@@ -1,6 +1,8 @@
 parameters:
   sow_translation.annotation_class_name: SOW\TranslationBundle\Annotation\Translation
+  sow_translation.attribute_class_name: SOW\TranslationBundle\Attribute\Translation
   sow_translation.translation_class_name: SOW\TranslationBundle\Entity\Translation
+  sow_translation.translation_method: annotation
 
   sow_translation.available_locales: [ 'en', 'fr', 'es', 'de', 'it' ]
 
@@ -18,6 +20,12 @@ services:
     arguments:
       - "@annotation_reader"
       - "%sow_translation.annotation_class_name%"
+      -
+  sow_translation.attribute_class_loader:
+    class: SOW\TranslationBundle\Loader\AttributeClassLoader
+    public: false
+    arguments:
+      - "%sow_translation.attribute_class_name%"
 
   sow_translation.translation_service:
     class: SOW\TranslationBundle\Service\TranslationService
@@ -34,5 +42,7 @@ services:
     arguments:
       - "@sow_translation.translation_service"
       - "@sow_translation.annotation_class_loader"
+      - "@sow_translation.attribute_class_loader"
       - "%sow_translation.available_locales%"
+      - "%sow_translation.translation_method%"
       - "@logger"
