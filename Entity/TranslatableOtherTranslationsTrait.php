@@ -16,7 +16,7 @@ namespace SOW\TranslationBundle\Entity;
  */
 trait TranslatableOtherTranslationsTrait
 {
-    protected $otherTranslations = [];
+    protected array $otherTranslations = [];
 
     /**
      * getOtherTranslations

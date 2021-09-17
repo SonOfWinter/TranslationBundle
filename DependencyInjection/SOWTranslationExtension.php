@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Bundle Extension class
  *
@@ -33,7 +32,6 @@ class SOWTranslationExtension extends Extension
      * @param ContainerBuilder $container
      *
      * @throws InvalidArgumentException When provided tag is not defined in this extension
-     *
      * @return void
      */
     public function load(array $configs, ContainerBuilder $container)

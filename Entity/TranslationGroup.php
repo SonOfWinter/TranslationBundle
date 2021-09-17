@@ -24,17 +24,11 @@ class TranslationGroup
      *
      * @var AbstractTranslation[]
      */
-    protected $translations = [];
+    protected array $translations = [];
 
-    /**
-     * @var Translatable
-     */
-    protected $translatable = null;
+    protected ?Translatable $translatable = null;
 
-    /**
-     * @var string
-     */
-    protected $lang;
+    protected string $lang;
 
     /**
      * TranslationGroup constructor.

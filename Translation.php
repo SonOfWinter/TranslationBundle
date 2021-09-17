@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Translation class
  *
@@ -10,29 +9,26 @@
 
 namespace SOW\TranslationBundle;
 
+use Serializable;
+
 /**
  * Class Translation
  *
  * @package SOW\TranslationBundle
  */
-class Translation implements \Serializable
+class Translation implements Serializable
 {
-    /**
-     * @var string
-     */
-    private $key = '';
+    private string $key;
 
-    /**
-     * @var string
-     */
-    private $setter = '';
+    private string $setter;
 
     /**
      * Translation constructor.
+     *
      * @param string $key
      * @param string $setter
      */
-    public function __construct(string $key, string $setter)
+    public function __construct(string $key = '', string $setter = '')
     {
         $this->key = $key;
         $this->setter = $setter;
@@ -43,10 +39,12 @@ class Translation implements \Serializable
      */
     public function serialize()
     {
-        return serialize([
-            'key'    => $this->key,
-            'setter' => $this->setter
-        ]);
+        return serialize(
+            [
+                'key' => $this->key,
+                'setter' => $this->setter,
+            ]
+        );
     }
 
     /**

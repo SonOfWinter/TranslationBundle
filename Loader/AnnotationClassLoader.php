@@ -10,6 +10,9 @@
 
 namespace SOW\TranslationBundle\Loader;
 
+use InvalidArgumentException;
+use ReflectionClass;
+use ReflectionProperty;
 use SOW\TranslationBundle\Exception\TranslatableConfigurationException;
 use SOW\TranslationBundle\Translation;
 use SOW\TranslationBundle\TranslationCollection;
@@ -69,20 +72,18 @@ class AnnotationClassLoader implements LoaderInterface
      * @param mixed $class
      * @param null $type
      *
-     * @throws \InvalidArgumentException
-     * @throws \ReflectionException
      * @throws TranslatableConfigurationException
-     *
+     * @throws InvalidArgumentException
      * @return TranslationCollection
      */
     public function load($class, $type = null): TranslationCollection
     {
         if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
-        $class = new \ReflectionClass($class);
+        $class = new ReflectionClass($class);
         if ($class->isAbstract()) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Annotations from class "%s" cannot be read as it is abstract.',
                     $class->getName()
@@ -116,7 +117,7 @@ class AnnotationClassLoader implements LoaderInterface
      * @param TranslationCollection $collection
      * @param \SOW\TranslationBundle\Annotation\Translation $annot
      * @param array $methods
-     * @param \ReflectionProperty $property
+     * @param ReflectionProperty $property
      *
      * @throws TranslatableConfigurationException
      *
@@ -126,7 +127,7 @@ class AnnotationClassLoader implements LoaderInterface
         TranslationCollection $collection,
         \SOW\TranslationBundle\Annotation\Translation $annot,
         array $methods,
-        \ReflectionProperty $property
+        ReflectionProperty $property
     ) {
         $propertyName = $property->getName();
         $method = $annot->getSetter() ?? 'set' . ucfirst($propertyName);

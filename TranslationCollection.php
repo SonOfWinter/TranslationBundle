@@ -10,31 +10,32 @@
 
 namespace SOW\TranslationBundle;
 
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
 use Symfony\Component\Config\Resource\ResourceInterface;
+use Traversable;
 
 /**
  * Class TranslationCollection
  *
  * @package SOW\TranslationBundle
  */
-class TranslationCollection implements \IteratorAggregate, \Countable
+class TranslationCollection implements IteratorAggregate, Countable
 {
     /**
      * @var Translation[]
      */
-    private $translations = [];
+    private array $translations = [];
+
+    private array $resources = [];
 
     /**
-     * @var array
-     */
-    private $resources = [];
-
-    /**
-     * @return \ArrayIterator|\Traversable
+     * @return ArrayIterator|Traversable
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->translations);
+        return new ArrayIterator($this->translations);
     }
 
     /**
@@ -79,7 +80,7 @@ class TranslationCollection implements \IteratorAggregate, \Countable
      */
     public function get($key)
     {
-        return isset($this->translations[$key]) ? $this->translations[$key] : null;
+        return $this->translations[$key] ?? null;
     }
 
     /**
@@ -89,10 +90,12 @@ class TranslationCollection implements \IteratorAggregate, \Countable
      *
      * @return void
      */
-    public function remove($key)
+    public function remove(string|array $key)
     {
-        foreach ((array)$key as $k) {
-            unset($this->translations[$k]);
+        if (!empty($key)) {
+            foreach ((array)$key as $k) {
+                unset($this->translations[$k]);
+            }
         }
     }
 
@@ -130,7 +133,7 @@ class TranslationCollection implements \IteratorAggregate, \Countable
      *
      * @return array
      */
-    public function getResources()
+    public function getResources(): array
     {
         return array_values($this->resources);
     }
