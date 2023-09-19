@@ -9,14 +9,12 @@
 
 namespace SOW\TranslationBundle;
 
-use Serializable;
-
 /**
  * Class Translation
  *
  * @package SOW\TranslationBundle
  */
-class Translation implements Serializable
+class Translation
 {
     private string $key;
 
@@ -34,25 +32,16 @@ class Translation implements Serializable
         $this->setter = $setter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize(
-            [
-                'key' => $this->key,
-                'setter' => $this->setter,
-            ]
-        );
+        return [
+            'key' => $this->key,
+            'setter' => $this->setter,
+        ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
+    public function __unserialize(array $data)
     {
-        $data = unserialize($serialized);
         $this->key = $data['key'];
         $this->setter = $data['setter'];
     }

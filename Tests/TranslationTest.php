@@ -40,20 +40,12 @@ class TranslationTest extends TestCase
 
     public function testSerializeTranslation()
     {
-        $serializedTranslation = serialize([
-            "key" => 'name',
-            "setter" => 'setName'
-        ]);
         $translation1 = new Translation('name', 'setName');
         $this->assertTrue($translation1 instanceof Translation);
-        $serializedTranslation1 = $translation1->serialize();
-        $this->assertEquals(
-            $serializedTranslation1,
-            $serializedTranslation
-        );
-        $translation2 = new Translation('name 2', 'setName 2');
-        $translation2->unserialize($serializedTranslation);
-        $this->assertEquals($translation2->getKey(), 'name');
-        $this->assertEquals($translation2->getSetter(), 'setName');
+        $serializedTranslation = serialize($translation1);
+        $translation2 = unserialize($serializedTranslation);
+        $this->assertTrue($translation2 instanceof Translation);
+        $this->assertEquals($translation2->getKey(), $translation1->getKey());
+        $this->assertEquals($translation2->getSetter(), $translation1->getSetter());
     }
 }

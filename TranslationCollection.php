@@ -33,7 +33,7 @@ class TranslationCollection implements IteratorAggregate, Countable
     /**
      * @return ArrayIterator|Traversable
      */
-    public function getIterator()
+    public function getIterator(): Traversable | ArrayIterator
     {
         return new ArrayIterator($this->translations);
     }
@@ -43,7 +43,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->translations);
     }
@@ -55,7 +55,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return void
      */
-    public function add(Translation $translation)
+    public function add(Translation $translation): void
     {
         unset($this->translations[$translation->getKey()]);
         $this->translations[$translation->getKey()] = $translation;
@@ -66,7 +66,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return Translation[]
      */
-    public function all()
+    public function all(): array
     {
         return $this->translations;
     }
@@ -78,7 +78,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return null|Translation
      */
-    public function get($key)
+    public function get($key): ?Translation
     {
         return $this->translations[$key] ?? null;
     }
@@ -90,7 +90,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return void
      */
-    public function remove(string|array $key)
+    public function remove(string|array $key): void
     {
         if (!empty($key)) {
             foreach ((array)$key as $k) {
@@ -116,7 +116,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return void
      */
-    public function addCollection(TranslationCollection $collection)
+    public function addCollection(TranslationCollection $collection): void
     {
         foreach ($collection->all() as $key => $translation) {
             unset($this->translations[$key]);
@@ -146,7 +146,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return void
      */
-    public function addResource(ResourceInterface $resource)
+    public function addResource(ResourceInterface $resource): void
     {
         $key = (string) $resource;
         if (!isset($this->resources[$key])) {
