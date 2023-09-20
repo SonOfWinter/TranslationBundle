@@ -11,6 +11,7 @@
 namespace SOW\TranslationBundle;
 
 use SOW\TranslationBundle\DependencyInjection\SOWTranslationExtension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -21,9 +22,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class SOWTranslationBundle extends Bundle
 {
     /**
-     * @return SOWTranslationExtension
+     * @return ExtensionInterface|null
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         return new SOWTranslationExtension();
     }
