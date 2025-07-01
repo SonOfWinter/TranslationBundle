@@ -1,8 +1,14 @@
-TranslationBundle
------------------
+# SOWTranslationBundle
 
-Installation
-============
+This Bundle provides a translator for Symfony entities.
+
+## Prerequisites
+
+- PHP 8.2 or higher
+- Symfony 7.0 or higher
+- Composer
+
+## Installation
 
 Open a command console, enter your project directory and execute:
 
@@ -10,55 +16,51 @@ Open a command console, enter your project directory and execute:
 $ composer require sonofwinter/translation-bundle
 ```
 
-Configuration
-=============
+## Configuration
 
-You can override sow_translation.available_locales parameter to a new list for set your available lang list
-default is _[ 'en', 'fr', 'es', 'de', 'it' ]_
+### Bundle Registration
 
-By default a Translation entity class exists but you can create your translation entity class who extends AbstractTranslation
-To use it, set the sow_translation.translation_class_name parameter to
-```xml
-<parameter key="sow_translation.translation_class_name">App\Entity\YourTranslationClass</parameter>
-```
-
-Usage
-=====
-
-Your translated entities must implements Translatable interface
-Then define translated properties in your entity
+Register the bundle in your `config/bundles.php`:
 
 ```php
-    /**
-     * @var string
-     * @Translate(key="firstname")
-     */
-    private $firstname;
-
-    /**
-     * @var string
-     * @Translate(key="lastname", setter="setOtherName")
-     */
-    private $lastname;
+return [
+    // ...
+    SOW\TranslationBundle\SOWTranslationBundle::class => ['all' => true],
+];
 ```
 
-You can defined the key property for matching another name, if it's not, the property name is taken by default.
-The setter property is used if you want to use another setter.
-A TranslatableConfigurationException is throws if the setter doens't exist.
+### Available Locales
 
+You can override the default available locales by setting the `sow_translation.available_locales` parameter:
 
-New n V0.8
-==========
+```yaml
+parameters:
+    sow_translation.available_locales: ['en', 'fr', 'es', 'de', 'it']
+```
 
-This bundle now require php >= 8.0
+### Custom Translation Entity
 
-you can use attribute instead of annotation
+By default, a Translation entity class is provided, but you can create your own translation entity class that extends AbstractTranslation.
+To use it, set the `sow_translation.translation_class_name` parameter:
+
+```yaml
+parameters:
+    sow_translation.translation_class_name: App\Entity\YourTranslationClass
+```
+
+## Usage
+
+### Setting Up Translatable Entities
+
+Your translated entities must implement the `Translatable` interface.
+Then define translated properties in your entity using either annotations or attributes.
+
+#### Using Attributes (PHP 8.0+)
 
 ```php
 use SOW\TranslationBundle\Attribute\Translation;
 
-class MyClasse {
-
+class MyClass {
     #[Translation(key: "firstname")]
     private string $firstname = '';
 
@@ -67,40 +69,57 @@ class MyClasse {
 }
 ```
 
-By default, the bundle use annotation method, you have to change configuration to use attributes
+### Configuration Notes
 
-```yaml
-    sow_translation.translation_method: attribute
+- The `key` property can be used to specify a different name for the translation key. If not provided, the property name is used.
+- The `setter` property allows you to specify a custom setter method. If the setter doesn't exist, a `TranslatableConfigurationException` will be thrown.
+
+## Translation Methods
+
+### Translating Entities
+
+```php
+// Translate an entity to a specific language
+$translator->translate($entity, 'en');
+
+// Translate an entity to multiple languages
+$translator->translateForLangs($entity, ['en', 'fr', 'de']);
 ```
 
-If you want to override attribute class, don't forget to define it in configuration
+### Setting Translations
 
-```yaml
-    sow_translation.attribute_class_name: SOW\TranslationBundle\Attribute\Translation
+```php
+// Set a single translation
+$translator->setTranslationForLangAndValue($entity, 'en', 'firstname', 'John');
+
+// Set multiple values for one language
+$translator->setTranslationForLangAndValues($entity, 'en', [
+    'firstname' => 'John',
+    'lastname' => 'Doe'
+]);
+
+// Set multiple translations for multiple languages
+$translator->setTranslations($entity, [
+    'en' => [
+        'firstname' => 'John',
+        'lastname' => 'Doe'
+    ],
+    'fr' => [
+        'firstname' => 'Jean',
+        'lastname' => 'Dupont'
+    ]
+]);
 ```
 
-Translate
-=========
+### Removing Translations
 
-You can use some methods for translate an entity :
+```php
+// Remove a specific translation
+$translator->removeByObjectKeyAndLang($entity, 'firstname', 'en');
 
-* _translate(Translatable $entity, string $lang)_ to translate the entity in $lang
-* _translateForLangs(Translatable $entity, array $langs)_ to translate the entity in multiple languages
+// Remove all translations for an entity
+$translator->removeAllForTranslatable($entity);
 
-Set translations
-================
-
-These methods is use for set translations :
-
-* _setTranslationForLangAndValue(Translatable $translatable, string $lang, string $key, string $value)_ to set a single translation
-* _setTranslationForLangAndValues(Translatable $translatable, string $lang, array $values)_ for set multiple values in one lang
-* _setTranslations(Translatable $translatable, array $translations)_ for set multiple translation for multiple languages
-
-Remove translations
-===================
-
-These methods is use for remove translations :
-
-* _removeByObjectKeyAndLang(Translatable $object, string $key, string $lang)_ remove a specific translation
-* _removeAllForTranslatable(Translatable $object)_ remove all translation for object
-* _removeAllByKey(string $key)_ remove all translation for property
+// Remove all translations for a specific key
+$translator->removeAllByKey('firstname');
+```
