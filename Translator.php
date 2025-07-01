@@ -218,8 +218,7 @@ class Translator implements TranslatorInterface
                 $translationGroups[$lang] = $this->setTranslationForLangAndValues(
                     $translatable,
                     $lang,
-                    $translation,
-                    false
+                    $translation
                 );
             } elseif ($this->logger) {
                 $this->logger->debug(sprintf("%s not in language list", $lang));
@@ -296,7 +295,7 @@ class Translator implements TranslatorInterface
      * @param string $lang
      *
      * @throws TranslatorConfigurationException
-     * @return array
+     * @return array<string, Translatable>
      */
     public function translateAll(string $entityName, array $translatables, string $lang): array
     {
