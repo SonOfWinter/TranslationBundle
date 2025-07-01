@@ -1,5 +1,4 @@
 <?php
-
 /**
  * TranslationGroupTest
  *
@@ -13,7 +12,7 @@ namespace SOW\TranslationBundle\Tests\Entity;
 use PHPUnit\Framework\TestCase;
 use SOW\TranslationBundle\Entity\Translation;
 use SOW\TranslationBundle\Entity\TranslationGroup;
-use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
+use SOW\TranslationBundle\Tests\Fixtures\AttributedClasses\TestObject;
 
 /**
  * Class TranslationGroupTest
@@ -22,18 +21,18 @@ use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
  */
 class TranslationGroupTest extends TestCase
 {
-    public function testSetterAndGetterTranslationGroup()
+    public function testSetterAndGetterTranslationGroup(): void
     {
         $testObject = new TestObject();
         $translationGroup = new TranslationGroup($testObject, 'fr');
         $this->assertTrue($translationGroup instanceof TranslationGroup);
-        $this->assertEquals($translationGroup->getLang(), 'fr');
-        $this->assertEquals($translationGroup->getTranslatable(), $testObject);
-        $this->assertEquals($translationGroup->getKey('name'), null);
-        $this->assertEquals($translationGroup->getTranslations(), []);
+        $this->assertEquals('fr', $translationGroup->getLang());
+        $this->assertEquals($testObject, $translationGroup->getTranslatable());
+        $this->assertEquals(null, $translationGroup->getKey('name'));
+        $this->assertEquals([], $translationGroup->getTranslations());
     }
 
-    public function testAddTranslation()
+    public function testAddTranslation(): void
     {
         $translation = new Translation();
         $translation->setValue('some name')
@@ -44,11 +43,11 @@ class TranslationGroupTest extends TestCase
         $testObject = new TestObject();
         $translationGroup = new TranslationGroup($testObject, 'fr');
         $translationGroup->addTranslation($translation);
-        $this->assertEquals($translationGroup->getKey('name'), $translation);
-        $this->assertEquals($translationGroup->getTranslations(), ['name' => $translation]);
+        $this->assertEquals($translation, $translationGroup->getKey('name'));
+        $this->assertEquals(['name' => $translation], $translationGroup->getTranslations());
     }
 
-    public function testRemoveTranslation()
+    public function testRemoveTranslation(): void
     {
         $translation = new Translation();
         $translation->setValue('some name')
@@ -59,13 +58,13 @@ class TranslationGroupTest extends TestCase
         $testObject = new TestObject();
         $translationGroup = new TranslationGroup($testObject, 'fr');
         $translationGroup->addTranslation($translation);
-        $this->assertEquals($translationGroup->getKey('name'), $translation);
+        $this->assertEquals($translation, $translationGroup->getKey('name'));
         $translationGroup->removeTranslations($translation);
-        $this->assertEquals($translationGroup->getKey('name'), null);
-        $this->assertEquals($translationGroup->getTranslations(), []);
+        $this->assertEquals(null, $translationGroup->getKey('name'));
+        $this->assertEquals([], $translationGroup->getTranslations());
     }
 
-    public function testChangeTranslationGroup()
+    public function testChangeTranslationGroup(): void
     {
         $translation = new Translation();
         $translation->setValue('some name')
@@ -78,7 +77,7 @@ class TranslationGroupTest extends TestCase
         $translationGroup = new TranslationGroup($testObject, 'fr');
         $translationGroup->setTranslations($translations);
         $translationGroup->setLang('en');
-        $this->assertEquals($translationGroup->getLang(), 'en');
-        $this->assertEquals($translationGroup->getKey('name'), $translation);
+        $this->assertEquals('en', $translationGroup->getLang());
+        $this->assertEquals($translation, $translationGroup->getKey('name'));
     }
 }

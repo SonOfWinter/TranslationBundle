@@ -1,5 +1,4 @@
 parameters:
-  sow_translation.annotation_class_name: SOW\TranslationBundle\Annotation\Translation
   sow_translation.attribute_class_name: SOW\TranslationBundle\Attribute\Translation
   sow_translation.translation_class_name: SOW\TranslationBundle\Entity\Translation
   sow_translation.translation_method: annotation
@@ -14,13 +13,6 @@ services:
       - "@doctrine.orm.entity_manager"
       - "%sow_translation.translation_class_name%"
 
-  sow_translation.annotation_class_loader:
-    class: SOW\TranslationBundle\Loader\AnnotationClassLoader
-    public: false
-    arguments:
-      - "@annotation_reader"
-      - "%sow_translation.annotation_class_name%"
-      -
   sow_translation.attribute_class_loader:
     class: SOW\TranslationBundle\Loader\AttributeClassLoader
     public: false
@@ -41,7 +33,6 @@ services:
     public: true
     arguments:
       - "@sow_translation.translation_service"
-      - "@sow_translation.annotation_class_loader"
       - "@sow_translation.attribute_class_loader"
       - "%sow_translation.available_locales%"
       - "%sow_translation.translation_method%"

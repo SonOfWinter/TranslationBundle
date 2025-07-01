@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Configuration test
- *
- * @package  SOW\TranslationBundle\Tests\DependencyInjection
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Tests\DependencyInjection;
 
 use SOW\TranslationBundle\DependencyInjection\Configuration;
@@ -21,7 +13,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
  */
 class ConfigurationTest extends TestCase
 {
-    public function testConfiguration()
+    public function testConfiguration(): void
     {
         $configuration = new Configuration();
         $tree = $configuration->getConfigTreeBuilder();

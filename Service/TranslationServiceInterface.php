@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Translation service interface
  *
@@ -20,12 +19,7 @@ use SOW\TranslationBundle\Entity\AbstractTranslation;
  */
 interface TranslationServiceInterface
 {
-    /**
-     * flush
-     *
-     * @return void
-     */
-    public function flush();
+    public function flush(): void;
 
     /**
      * findAllForObjectWithLang
@@ -35,7 +29,7 @@ interface TranslationServiceInterface
      *
      * @return mixed
      */
-    public function findAllForObjectWithLang(Translatable $translatable, string $lang);
+    public function findAllForObjectWithLang(Translatable $translatable, string $lang): mixed;
 
     /**
      * findOneForObjectWithLang
@@ -46,7 +40,11 @@ interface TranslationServiceInterface
      *
      * @return mixed
      */
-    public function findOneForObjectWithLang(Translatable $translatable, string $key, string $lang);
+    public function findOneForObjectWithLang(
+        Translatable $translatable,
+        string $key,
+        string $lang
+    ): mixed;
 
     /**
      * findAllForObject
@@ -55,7 +53,7 @@ interface TranslationServiceInterface
      *
      * @return mixed
      */
-    public function findAllForObject(Translatable $translatable);
+    public function findAllForObject(Translatable $translatable): mixed;
 
     /**
      * findByKey

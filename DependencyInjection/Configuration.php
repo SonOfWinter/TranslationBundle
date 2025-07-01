@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Configuration class
- *
- * @package  SOW\TranslationBundle\DependencyInjection
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -25,7 +17,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return TreeBuilder The tree builder
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         return new TreeBuilder('sow_translation');
     }

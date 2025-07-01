@@ -1,13 +1,5 @@
 <?php
 
-/**
- * TranslatorConfigurationException
- *
- * @package  SOW\TranslationBundle\Exception
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Exception;
 
 use Exception;
@@ -23,8 +15,8 @@ class TranslatorConfigurationException extends Exception
     /**
      * TranslatorConfigurationException constructor.
      *
-     * @param string          $message
-     * @param int             $code
+     * @param string $message
+     * @param int $code
      * @param Throwable|null $previous
      */
     public function __construct(

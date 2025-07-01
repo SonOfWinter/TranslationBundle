@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @package  SOW\BindingBundle\Tests\DependencyInjection
- * @author   Openium <contact@openium.fr>
- * @license  Openium All right reserved
- * @link     https://www.openium.fr/
- */
-
 namespace SOW\TranslationBundle\Tests\DependencyInjection;
 
 use SOW\TranslationBundle\DependencyInjection\Configuration;
@@ -21,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class SOWTranslationExtensionTest extends TestCase
 {
-    public function testLoad()
+    public function testLoad(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
         $container->expects($this->once())

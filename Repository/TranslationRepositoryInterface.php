@@ -1,21 +1,16 @@
 <?php
 
-/**
- * Translation Repository Interface
- *
- * @package  SOW\TranslationBundle\Annotation
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Repository;
 
+use SOW\TranslationBundle\Entity\AbstractTranslation;
 use SOW\TranslationBundle\Entity\Translatable;
 
 /**
  * Interface TranslationRepositoryInterface
  *
  * @package  SOW\TranslationBundle\Repository
+ * @method findBy(array $data, array $orderBy = []): array
+ * @method findOneBy(array $data): mixed
  */
 interface TranslationRepositoryInterface
 {
@@ -25,9 +20,9 @@ interface TranslationRepositoryInterface
      * @param Translatable $translatable
      * @param array $langs
      *
-     * @return mixed
+     * @return AbstractTranslation[]
      */
-    public function findAllByObjectAndLangs(Translatable $translatable, array $langs);
+    public function findAllByObjectAndLangs(Translatable $translatable, array $langs): array;
 
     /**
      * findAllByEntityNameAndLang
@@ -36,26 +31,7 @@ interface TranslationRepositoryInterface
      * @param array $ids
      * @param string $lang
      *
-     * @return mixed
+     * @return AbstractTranslation[]
      */
-    public function findAllByEntityNameAndLang(string $entityName, array $ids, string $lang);
-
-    /**
-     * findBy
-     *
-     * @param array $data
-     * @param array $orderBy
-     *
-     * @return mixed
-     */
-    public function findBy(array $data, array $orderBy = []);
-
-    /**
-     * findOneBy
-     *
-     * @param array $data
-     *
-     * @return mixed
-     */
-    public function findOneBy(array $data);
+    public function findAllByEntityNameAndLang(string $entityName, array $ids, string $lang): array;
 }

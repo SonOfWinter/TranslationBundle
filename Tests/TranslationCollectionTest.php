@@ -1,17 +1,9 @@
 <?php
 
-/**
- * TranslationCollectionTest
- *
- * @package  SOW\TranslationBundle\Tests
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
-use SOW\TranslationBundle\Tests\Fixtures\AnnotatedClasses\TestObject;
+use SOW\TranslationBundle\Tests\Fixtures\AttributedClasses\TestObject;
 use SOW\TranslationBundle\Translation;
 use SOW\TranslationBundle\TranslationCollection;
 use Symfony\Component\Config\Resource\FileResource;
@@ -23,17 +15,14 @@ use Symfony\Component\Config\Resource\FileResource;
  */
 class TranslationCollectionTest extends TestCase
 {
-    /**
-     * @var TestObject
-     */
-    protected $testObject;
+    protected TestObject $testObject;
 
     public function setUp(): void
     {
         $this->testObject = new TestObject();
     }
 
-    public function testCreateTranslationCollection()
+    public function testCreateTranslationCollection(): void
     {
         $translationCollection = new TranslationCollection();
         $this->assertTrue($translationCollection instanceof TranslationCollection);
@@ -41,7 +30,7 @@ class TranslationCollectionTest extends TestCase
         $this->assertEquals($translationCollection->all(), []);
     }
 
-    public function testAddElementInTranslationCollection()
+    public function testAddElementInTranslationCollection(): void
     {
         $translationCollection = new TranslationCollection();
         $class = new \ReflectionClass($this->testObject);
@@ -60,7 +49,7 @@ class TranslationCollectionTest extends TestCase
         $this->assertEquals(count($iterator), 1);
     }
 
-    public function testRemoveElementInTranslationCollection()
+    public function testRemoveElementInTranslationCollection(): void
     {
         $translationCollection = new TranslationCollection();
         $class = new \ReflectionClass($this->testObject);
@@ -76,7 +65,7 @@ class TranslationCollectionTest extends TestCase
         $this->assertEquals($translationCollection->all(), []);
     }
 
-    public function testAddOtherCollectionInTranslationCollection()
+    public function testAddOtherCollectionInTranslationCollection(): void
     {
         $class = new \ReflectionClass($this->testObject);
         $resource = new FileResource($class->getFileName());
@@ -93,7 +82,10 @@ class TranslationCollectionTest extends TestCase
         $translationCollection1->addCollection($translationCollection2);
         $this->assertEquals(count($translationCollection1), 2);
         $this->assertEquals($translationCollection1->getKeys(), ['name', 'age']);
-        $this->assertEquals($translationCollection1->all(), ['name' => $translation1, 'age' => $translation2]);
+        $this->assertEquals(
+            $translationCollection1->all(),
+            ['name' => $translation1, 'age' => $translation2]
+        );
         $this->assertEquals($translationCollection1->getResources(), [$resource]);
     }
 }

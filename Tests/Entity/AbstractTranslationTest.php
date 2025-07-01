@@ -1,13 +1,5 @@
 <?php
 
-/**
- * TranslationTest
- *
- * @package  SOW\TranslationBundle\Tests\Entity
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
@@ -21,7 +13,7 @@ use SOW\TranslationBundle\Entity\Translation;
  */
 class AbstractTranslationTest extends TestCase
 {
-    public function testSetterAndGetterTranslation()
+    public function testSetterAndGetterTranslation(): void
     {
         $translation = new Translation();
         $translation->setValue('some name')
@@ -29,12 +21,11 @@ class AbstractTranslationTest extends TestCase
             ->setKey('name')
             ->setEntityName('someEntity')
             ->setLang('fr');
-
         $this->assertTrue($translation instanceof AbstractTranslation);
-        $this->assertEquals($translation->getValue(), 'some name');
-        $this->assertEquals($translation->getEntityId(), '1');
-        $this->assertEquals($translation->getKey(), 'name');
-        $this->assertEquals($translation->getEntityName(), 'someEntity');
-        $this->assertEquals($translation->getLang(), 'fr');
+        $this->assertEquals('some name', $translation->getValue());
+        $this->assertEquals('1', $translation->getEntityId());
+        $this->assertEquals('name', $translation->getKey());
+        $this->assertEquals('someEntity', $translation->getEntityName());
+        $this->assertEquals('fr', $translation->getLang());
     }
 }

@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Translator Interface
- *
- * @package  SOW\TranslationBundle
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle;
 
 use SOW\TranslationBundle\Entity\Translatable;
@@ -26,13 +18,9 @@ interface TranslatorInterface
     /**
      * setResource
      *
-     * @param $resource
-     *
      * @throws \Exception
-     *
-     * @return void
      */
-    public function setResource($resource);
+    public function setResource(mixed $resource): void;
 
     /**
      * checkTranslation
@@ -52,7 +40,6 @@ interface TranslatorInterface
      *
      * @throws TranslatorConfigurationException
      * @throws \Exception
-     *
      * @return TranslationCollection
      */
     public function getTranslationCollection(): TranslationCollection;
@@ -101,7 +88,6 @@ interface TranslatorInterface
      * @param bool $flush
      *
      * @throws TranslatorConfigurationException
-     *
      * @return TranslationGroup
      */
     public function setTranslationForLangAndValues(
@@ -119,7 +105,6 @@ interface TranslatorInterface
      * @param bool $flush
      *
      * @return array
-     *
      * Translation array must be like :
      * [
      *     "fr" => [
@@ -145,7 +130,6 @@ interface TranslatorInterface
      *
      * @throws TranslatableConfigurationException
      * @throws TranslatorConfigurationException
-     *
      * @return Translatable
      */
     public function translate(Translatable $translatable, string $lang): Translatable;
@@ -172,7 +156,6 @@ interface TranslatorInterface
      *
      * @throws TranslatableConfigurationException
      * @throws TranslatorConfigurationException
-     *
      * @return array
      */
     public function translateAll(string $entityName, array $translatables, string $lang): array;

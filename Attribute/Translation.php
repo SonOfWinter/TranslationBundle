@@ -1,11 +1,4 @@
 <?php
-/**
- * Translation attribute class
- *
- * @package  SOW\TranslationBundle\Attribute
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
 
 namespace SOW\TranslationBundle\Attribute;
 
@@ -44,7 +37,7 @@ class Translation
      *
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -67,7 +60,7 @@ class Translation
      *
      * @return string
      */
-    public function getSetter()
+    public function getSetter(): string
     {
         return $this->setter;
     }

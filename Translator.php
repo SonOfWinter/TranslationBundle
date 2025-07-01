@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Translator
- *
- * @package  SOW\TranslationBundle
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle;
 
 use Exception;
@@ -27,7 +19,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class Translator implements TranslatorInterface
 {
-    public const METHOD_ANNOTATION = "annotation";
     public const METHOD_ATTRIBUTE = "attribute";
 
     protected ?string $resource = null;
@@ -36,6 +27,7 @@ class Translator implements TranslatorInterface
 
     protected TranslationServiceInterface $translationService;
 
+    /** @var string[] */
     protected array $langs;
 
     protected ?LoggerInterface $logger = null;
@@ -46,9 +38,8 @@ class Translator implements TranslatorInterface
      * Translator constructor.
      *
      * @param TranslationServiceInterface $translationService
-     * @param LoaderInterface $annotationLoader
      * @param LoaderInterface $attributeLoader
-     * @param array $langs
+     * @param string[] $languages
      * @param string $translationMethod
      * @param null|LoggerInterface $logger
      *
@@ -56,34 +47,22 @@ class Translator implements TranslatorInterface
      */
     public function __construct(
         TranslationServiceInterface $translationService,
-        LoaderInterface $annotationLoader,
         LoaderInterface $attributeLoader,
-        array $langs,
+        array $languages,
         string $translationMethod,
         ?LoggerInterface $logger = null
     ) {
         $this->translationService = $translationService;
         if ($translationMethod === self::METHOD_ATTRIBUTE) {
             $this->loader = $attributeLoader;
-        } elseif ($translationMethod === self::METHOD_ANNOTATION) {
-            $this->loader = $annotationLoader;
         } else {
             throw new TranslatorConfigurationException("Wrong translator method");
         }
-        $this->langs = $langs;
+        $this->langs = $languages;
         $this->logger = $logger;
     }
 
-    /**
-     * setResource
-     *
-     * @param $resource
-     *
-     * @throws Exception
-     *
-     * @return void
-     */
-    public function setResource($resource)
+    public function setResource(mixed $resource): void
     {
         if (is_string($resource)) {
             $this->resource = $resource;
@@ -93,15 +72,6 @@ class Translator implements TranslatorInterface
         $this->loadCollection();
     }
 
-    /**
-     * checkTranslation
-     *
-     * @param Translatable $object
-     * @param string $key
-     * @param string $lang
-     *
-     * @return bool
-     */
     public function checkTranslation(Translatable $object, string $key, string $lang): bool
     {
         return $this->translationService->checkTranslation($object, $key, $lang);
@@ -113,7 +83,6 @@ class Translator implements TranslatorInterface
      *
      * @throws TranslatorConfigurationException
      * @throws Exception
-     *
      * @return TranslationCollection
      */
     public function getTranslationCollection(): TranslationCollection
@@ -128,10 +97,9 @@ class Translator implements TranslatorInterface
      * loadCollection
      *
      * @throws Exception
-     *
      * @return TranslationCollection|null
      */
-    private function loadCollection()
+    private function loadCollection(): ?TranslationCollection
     {
         $this->collection = $this->loader->load($this->resource, 'annotation');
         return $this->collection;
@@ -191,7 +159,6 @@ class Translator implements TranslatorInterface
      * @param bool $flush
      *
      * @throws TranslatorConfigurationException
-     *
      * @return TranslationGroup
      */
     public function setTranslationForLangAndValues(
@@ -205,14 +172,14 @@ class Translator implements TranslatorInterface
         }
         $translationGroup = new TranslationGroup($translatable, $lang);
         $collection = $this->getTranslationCollection();
-        foreach ($collection as $t) {
-            if (array_key_exists($t->getKey(), $values)) {
+        foreach ($collection as $item) {
+            if (array_key_exists($item->getKey(), $values)) {
                 $translationGroup->addTranslation(
                     $this->setTranslationForLangAndValue(
                         $translatable,
                         $lang,
-                        $t->getKey(),
-                        $values[$t->getKey()] ?? '',
+                        $item->getKey(),
+                        $values[$item->getKey()] ?? '',
                         $flush
                     )
                 );
@@ -229,9 +196,7 @@ class Translator implements TranslatorInterface
      * @param bool $flush
      *
      * @throws TranslatorConfigurationException
-     *
      * @return array
-     *
      * Translation array must be like :
      * [
      *     "fr" => [
@@ -242,8 +207,11 @@ class Translator implements TranslatorInterface
      *     ],
      * ]
      */
-    public function setTranslations(Translatable $translatable, array $translations, bool $flush = false): array
-    {
+    public function setTranslations(
+        Translatable $translatable,
+        array $translations,
+        bool $flush = false
+    ): array {
         $translationGroups = [];
         foreach ($translations as $lang => $translation) {
             if (in_array($lang, $this->langs) and is_array($translation)) {
@@ -272,7 +240,6 @@ class Translator implements TranslatorInterface
      *
      * @throws TranslatableConfigurationException
      * @throws TranslatorConfigurationException
-     *
      * @return Translatable
      */
     public function translate(Translatable $translatable, string $lang): Translatable
@@ -284,9 +251,9 @@ class Translator implements TranslatorInterface
         $collection = $this->getTranslationCollection();
         foreach ($translationGroup->getTranslations() as $translation) {
             $key = $translation->getKey();
-            $t = $collection->get($key);
-            if ($t !== null) {
-                $setter = $t->getSetter();
+            $value = $collection->get($key);
+            if ($value !== null) {
+                $setter = $value->getSetter();
                 $translatable->$setter($translation->getValue());
             } else {
                 $translatable->setOtherTranslation($key, $translation->getValue());
@@ -305,7 +272,6 @@ class Translator implements TranslatorInterface
      *
      * @throws TranslatableConfigurationException
      * @throws TranslatorConfigurationException
-     *
      * @return array
      */
     public function translateForLangs(Translatable $translatable, array $langs): array
@@ -326,11 +292,10 @@ class Translator implements TranslatorInterface
      * translateAll
      *
      * @param string $entityName
-     * @param array $translatables
+     * @param Translatable[] $translatables
      * @param string $lang
      *
      * @throws TranslatorConfigurationException
-     *
      * @return array
      */
     public function translateAll(string $entityName, array $translatables, string $lang): array
@@ -342,14 +307,18 @@ class Translator implements TranslatorInterface
         $this->setResource($elem);
         $collection = $this->getTranslationCollection();
         $map = $this->translatableArrayToMap($translatables);
-        $translations = $this->translationService->findByEntityNameAndLang($entityName, array_keys($map), $lang);
+        $translations = $this->translationService->findByEntityNameAndLang(
+            $entityName,
+            array_keys($map),
+            $lang
+        );
         /** @var \SOW\TranslationBundle\Entity\Translation $translation */
         foreach ($translations as $translation) {
             $id = $translation->getEntityId();
             if (array_key_exists($id, $map)) {
                 $key = $translation->getKey();
-                $t = $collection->get($key);
-                if ($t !== null) {
+                $value = $collection->get($key);
+                if ($value !== null) {
                     $setter = $collection->get($key)->getSetter();
                     $map[$id]->$setter($translation->getValue());
                 } else {
@@ -363,9 +332,9 @@ class Translator implements TranslatorInterface
     /**
      * translatableArrayToMap
      *
-     * @param array $translatables
+     * @param Translatable[] $translatables
      *
-     * @return array
+     * @return array<string, Translatable>
      */
     private function translatableArrayToMap(array $translatables): array
     {

@@ -1,13 +1,5 @@
 <?php
 
-/**
- * AbstractTranslation abstract class
- *
- * @package  SOW\TranslationBundle\Entity
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -16,49 +8,38 @@ use Doctrine\ORM\Mapping as ORM;
  * Class AbstractTranslation
  *
  * @package SOW\TranslationBundle\Entity
- *
  * @ORM\MappedSuperclass
  */
 abstract class AbstractTranslation
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="`key`", type="string", length=150)
      * @ORM\Id
      */
-    protected $key;
+    protected string $key;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="`lang`", type="string", length=2)
      * @ORM\Id
      */
-    protected $lang;
+    protected string $lang;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="`entity_name`", type="string", length=150)
      * @ORM\Id
      */
-    protected $entityName;
+    protected string $entityName;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="`entity_id`", type="string", length=36)
      * @ORM\Id
      */
-    protected $entityId;
+    protected string $entityId;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="`value`", type="text")
      */
-    protected $value;
+    protected string $value;
 
     /**
      * Getter for key

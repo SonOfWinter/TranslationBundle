@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Translation class
- *
- * @package  SOW\TranslationBundle\Entity
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

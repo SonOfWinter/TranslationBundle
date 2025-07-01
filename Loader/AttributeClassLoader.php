@@ -1,11 +1,4 @@
 <?php
-/**
- * Attribute class loader
- *
- * @package  SOW\TranslationBundle\Loader
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
 
 namespace SOW\TranslationBundle\Loader;
 
@@ -28,6 +21,8 @@ class AttributeClassLoader implements LoaderInterface
 {
     protected string $translationAttributeClass;
 
+    private LoaderResolverInterface $resolver;
+
     /**
      * AttributeClassLoader constructor.
      *
@@ -45,7 +40,7 @@ class AttributeClassLoader implements LoaderInterface
      *
      * @return void
      */
-    public function setTranslationAttributeClass(string $class)
+    public function setTranslationAttributeClass(string $class): void
     {
         $this->translationAttributeClass = $class;
     }
@@ -53,34 +48,34 @@ class AttributeClassLoader implements LoaderInterface
     /**
      * Load attributes from class
      *
-     * @param mixed $class
+     * @param mixed $resource
      * @param null $type
      *
      * @throws TranslatableConfigurationException
      * @throws InvalidArgumentException
      * @return TranslationCollection
      */
-    public function load($class, $type = null): TranslationCollection
+    public function load(mixed $resource, $type = null): TranslationCollection
     {
-        if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+        if (!class_exists($resource)) {
+            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $resource));
         }
-        $class = new ReflectionClass($class);
-        if ($class->isAbstract()) {
+        $resource = new ReflectionClass($resource);
+        if ($resource->isAbstract()) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Attributes from class "%s" cannot be read as it is abstract.',
-                    $class->getName()
+                    $resource->getName()
                 )
             );
         }
         $collection = new TranslationCollection();
-        $collection->addResource(new FileResource($class->getFileName()));
+        $collection->addResource(new FileResource($resource->getFileName()));
         $methods = [];
-        foreach ($class->getMethods() as $reflectionMethod) {
+        foreach ($resource->getMethods() as $reflectionMethod) {
             $methods[] = $reflectionMethod->getName();
         }
-        foreach ($class->getProperties() as $property) {
+        foreach ($resource->getProperties() as $property) {
             $attributes = $property->getAttributes($this->translationAttributeClass);
             foreach ($attributes as $attribute) {
                 $listener = $attribute->newInstance();
@@ -113,7 +108,7 @@ class AttributeClassLoader implements LoaderInterface
         \SOW\TranslationBundle\Attribute\Translation $attribute,
         array $methods,
         ReflectionProperty $property
-    ) {
+    ): void {
         $propertyName = $property->getName();
         $method = $attribute->getSetter() ?? 'set' . ucfirst($propertyName);
         if (in_array($method, $methods)) {
@@ -132,30 +127,20 @@ class AttributeClassLoader implements LoaderInterface
      *
      * @return bool
      */
-    public function supports($resource, $type = null)
+    public function supports(mixed $resource, $type = null): bool
     {
         return is_string($resource)
             && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource)
             && (!$type || 'attribute' === $type);
     }
 
-    /**
-     * Not implemented
-     *
-     * @return LoaderResolverInterface|void
-     */
-    public function getResolver()
+    public function getResolver(): LoaderResolverInterface
     {
+        return $this->resolver;
     }
 
-    /**
-     * Not implemented
-     *
-     * @param LoaderResolverInterface $resolver
-     *
-     * @return void
-     */
-    public function setResolver(LoaderResolverInterface $resolver)
+    public function setResolver(LoaderResolverInterface $resolver): void
     {
+        $this->resolver = $resolver;
     }
 }

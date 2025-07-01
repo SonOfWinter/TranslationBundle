@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Translation Collection class
- *
- * @package  SOW\TranslationBundle
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle;
 
 use ArrayIterator;
@@ -23,16 +15,12 @@ use Traversable;
  */
 class TranslationCollection implements IteratorAggregate, Countable
 {
-    /**
-     * @var Translation[]
-     */
+    /** @var array<string, Translation> */
     private array $translations = [];
 
+    /** @var ResourceInterface[] */
     private array $resources = [];
 
-    /**
-     * @return ArrayIterator|Traversable
-     */
     public function getIterator(): Traversable | ArrayIterator
     {
         return new ArrayIterator($this->translations);
@@ -64,21 +52,14 @@ class TranslationCollection implements IteratorAggregate, Countable
     /**
      * Get all translation elements
      *
-     * @return Translation[]
+     * @return array<string, Translation>
      */
     public function all(): array
     {
         return $this->translations;
     }
 
-    /**
-     * Get a translation element by key
-     *
-     * @param $key
-     *
-     * @return null|Translation
-     */
-    public function get($key): ?Translation
+    public function get(string $key): ?Translation
     {
         return $this->translations[$key] ?? null;
     }
@@ -90,7 +71,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      *
      * @return void
      */
-    public function remove(string|array $key): void
+    public function remove(string | array $key): void
     {
         if (!empty($key)) {
             foreach ((array)$key as $k) {
@@ -102,7 +83,7 @@ class TranslationCollection implements IteratorAggregate, Countable
     /**
      * Get all keys
      *
-     * @return array
+     * @return string[]
      */
     public function getKeys(): array
     {
@@ -127,11 +108,10 @@ class TranslationCollection implements IteratorAggregate, Countable
         }
     }
 
-
     /**
      * Returns an array of resources loaded to build this collection.
      *
-     * @return array
+     * @return ResourceInterface[]
      */
     public function getResources(): array
     {
@@ -148,7 +128,7 @@ class TranslationCollection implements IteratorAggregate, Countable
      */
     public function addResource(ResourceInterface $resource): void
     {
-        $key = (string) $resource;
+        $key = (string)$resource;
         if (!isset($this->resources[$key])) {
             $this->resources[$key] = $resource;
         }

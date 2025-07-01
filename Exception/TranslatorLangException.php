@@ -1,13 +1,5 @@
 <?php
 
-/**
- * TranslatorLangException
- *
- * @package  SOW\TranslationBundle\Exception
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Exception;
 
 use Exception;

@@ -1,11 +1,4 @@
 <?php
-/**
- * Bundle Extension class
- *
- * @package  SOW\TranslationBundle\DependencyInjection
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
 
 namespace SOW\TranslationBundle\DependencyInjection;
 
@@ -34,7 +27,7 @@ class SOWTranslationExtension extends Extension
      * @throws InvalidArgumentException When provided tag is not defined in this extension
      * @return void
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
         $this->processConfiguration($configuration, $configs);

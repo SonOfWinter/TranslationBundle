@@ -1,18 +1,12 @@
 <?php
 
-/**
- * Translation Repository
- *
- * @package  SOW\TranslationBundle\Annotation
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use SOW\TranslationBundle\Entity\AbstractTranslation;
 use SOW\TranslationBundle\Entity\Translatable;
 
 /**
@@ -40,23 +34,25 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
      * @param Translatable $translatable
      * @param array $langs
      *
-     * @return mixed
+     * @return AbstractTranslation[]
      */
-    public function findAllByObjectAndLangs(Translatable $translatable, array $langs)
+    public function findAllByObjectAndLangs(Translatable $translatable, array $langs): array
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('t');
-        $qb->from($this->_entityName, 't')
+        $qb->from($this->getEntityName(), 't')
             ->where('t.entityName = :entityName')
             ->andWhere('t.entityId = :entityId')
             ->andWhere('t.lang IN (:langs)')
             ->orderBy('t.key', 'ASC')
             ->setParameters(
-                [
-                    "entityName" => $translatable->getEntityName(),
-                    "entityId" => $translatable->getId(),
-                    "langs" => $langs
-                ]
+                new ArrayCollection(
+                    [
+                        "entityName" => $translatable->getEntityName(),
+                        "entityId" => $translatable->getId(),
+                        "langs" => $langs,
+                    ]
+                )
             );
         return $qb->getQuery()->getResult();
     }
@@ -68,25 +64,24 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
      * @param array $ids
      * @param string $lang
      *
-     * @return mixed
+     * @return AbstractTranslation[]
      */
-    public function findAllByEntityNameAndLang(string $entityName, array $ids, string $lang)
+    public function findAllByEntityNameAndLang(string $entityName, array $ids, string $lang): array
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('t');
-        $qb->from($this->_entityName, 't')
+        $qb->from($this->getEntityName(), 't')
             ->where('t.entityName = :entityName')
             ->andWhere('t.lang = :lang')
             ->andWhere('t.entityId IN (:ids)')
             ->orderBy('t.entityId', 'ASC')
             ->setParameters(
-                [
+                new ArrayCollection([
                     "entityName" => $entityName,
                     "lang" => $lang,
-                    "ids" => $ids
-                ]
+                    "ids" => $ids,
+                ])
             );
         return $qb->getQuery()->getResult();
     }
-
 }

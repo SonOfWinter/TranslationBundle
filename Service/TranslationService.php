@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Translation Service
- *
- * @package  SOW\TranslationBundle\Service
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,25 +15,13 @@ use SOW\TranslationBundle\Repository\TranslationRepositoryInterface;
  */
 class TranslationService implements TranslationServiceInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
+    protected EntityManagerInterface $em;
 
-    /**
-     * @var TranslationRepositoryInterface
-     */
-    protected $repository;
+    protected TranslationRepositoryInterface $repository;
 
-    /**
-     * @var string
-     */
-    protected $translationClassName;
+    protected string $translationClassName;
 
-    /**
-     * @var array
-     */
-    protected $langs;
+    protected array $langs;
 
     /**
      * TranslationService constructor.
@@ -68,7 +48,7 @@ class TranslationService implements TranslationServiceInterface
      *
      * @return void
      */
-    public function flush()
+    public function flush(): void
     {
         $this->em->flush();
     }
@@ -80,10 +60,9 @@ class TranslationService implements TranslationServiceInterface
      * @param string $lang
      *
      * @throws TranslatorLangException
-     *
      * @return array
      */
-    public function findAllForObjectWithLang(Translatable $translatable, string $lang)
+    public function findAllForObjectWithLang(Translatable $translatable, string $lang): array
     {
         if (!in_array($lang, $this->langs)) {
             throw new TranslatorLangException();
@@ -92,7 +71,7 @@ class TranslationService implements TranslationServiceInterface
                 [
                     "entityName" => $translatable->getEntityName(),
                     "entityId" => $translatable->getId(),
-                    "lang" => $lang
+                    "lang" => $lang,
                 ]
             );
         }
@@ -106,7 +85,6 @@ class TranslationService implements TranslationServiceInterface
      * @param string $lang
      *
      * @throws TranslatorLangException
-     *
      * @return AbstractTranslation|null
      */
     public function findOneForObjectWithLang(
@@ -122,7 +100,7 @@ class TranslationService implements TranslationServiceInterface
                     "entityName" => $translatable->getEntityName(),
                     "entityId" => $translatable->getId(),
                     "lang" => $lang,
-                    "key" => $key
+                    "key" => $key,
                 ]
             );
         }
@@ -135,12 +113,12 @@ class TranslationService implements TranslationServiceInterface
      *
      * @return array
      */
-    public function findAllForObject(Translatable $translatable)
+    public function findAllForObject(Translatable $translatable): array
     {
         return $this->repository->findBy(
             [
                 "entityName" => $translatable->getEntityName(),
-                "entityId" => $translatable->getId()
+                "entityId" => $translatable->getId(),
             ],
             ["lang" => "ASC"]
         );
@@ -180,7 +158,6 @@ class TranslationService implements TranslationServiceInterface
      * @param string $lang
      *
      * @throws TranslatorLangException
-     *
      * @return bool
      */
     public function checkTranslation(Translatable $object, string $key, string $lang): bool
@@ -232,7 +209,6 @@ class TranslationService implements TranslationServiceInterface
      * @param bool $flush
      *
      * @throws TranslatorLangException
-     *
      * @return AbstractTranslation
      */
     public function edit(
@@ -281,7 +257,6 @@ class TranslationService implements TranslationServiceInterface
      * @param bool $flush
      *
      * @throws TranslatorLangException
-     *
      * @return bool
      */
     public function removeByObjectKeyAndLang(

@@ -1,15 +1,8 @@
 <?php
 
-/**
- * AttributeClassLoader test
- *
- * @package  SOW\TranslationBundle\Tests\Loader
- * @author   Thomas LEDUC <thomaslmoi15@hotmail.fr>
- * @link     https://github.com/SonOfWinter/TranslationBundle
- */
-
 namespace SOW\TranslationBundle\Tests\Loader;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SOW\TranslationBundle\Loader\AttributeClassLoader;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -23,7 +16,7 @@ class AttributeClassLoaderTest extends TestCase
 {
     private AttributeClassLoader $loader;
 
-    private $translationAttributeClass = 'SOW\\TranslationBundle\\Attribute\\Translation';
+    private string $translationAttributeClass = 'SOW\\TranslationBundle\\Attribute\\Translation';
 
     protected function setUp(): void
     {
@@ -31,7 +24,7 @@ class AttributeClassLoaderTest extends TestCase
         $this->loader = $this->getClassLoader();
     }
 
-    protected function setObjectAttribute($object, $attributeName, $value)
+    protected function setObjectAttribute($object, $attributeName, $value): void
     {
         $reflection = new \ReflectionObject($object);
         $property = $reflection->getProperty($attributeName);
@@ -42,17 +35,15 @@ class AttributeClassLoaderTest extends TestCase
         );
     }
 
-    public function getClassLoader()
+    public function getClassLoader(): MockObject
     {
-        return $this->getMockBuilder(
-            'SOW\TranslationBundle\Loader\AttributeClassLoader'
-        )->setConstructorArgs([$this->translationAttributeClass])
+        return $this->getMockBuilder('SOW\TranslationBundle\Loader\AttributeClassLoader')
+            ->setConstructorArgs([$this->translationAttributeClass])
             ->getMockForAbstractClass();
     }
 
     # setTranslationAttributeClass
-
-    public function testChangeAttributeClass()
+    public function testChangeAttributeClass(): void
     {
         $newClass = 'SOW\\TranslationBundle\\Tests\\Fixtures\\AttributedClasses\\TestAttributeObject';
         $this->loader->setTranslationAttributeClass($newClass);
@@ -66,14 +57,13 @@ class AttributeClassLoaderTest extends TestCase
     }
 
     # load
-
-    public function testLoadWrongClass()
+    public function testLoadWrongClass(): void
     {
         static::expectException('\InvalidArgumentException');
         $this->loader->load('WrongClass');
     }
 
-    public function testLoadAbstractClass()
+    public function testLoadAbstractClass(): void
     {
         static::expectException('\InvalidArgumentException');
         $this->loader->load(
@@ -81,41 +71,21 @@ class AttributeClassLoaderTest extends TestCase
         );
     }
 
-    public function testLoadClass()
+    public function testLoadClass(): void
     {
         $collection = $this->loader->load(
             'SOW\TranslationBundle\Tests\Fixtures\AttributedClasses\TestAttributeObject'
         );
-        $this->assertEquals(
-            2,
-            $collection->count()
-        );
+        $this->assertEquals(2, $collection->count());
     }
 
-    public function testSupportsChecksTypeIfSpecified()
+    public function testSupportsChecksTypeIfSpecified(): void
     {
         $this->assertTrue(
-            $this->loader->supports(
-                'class',
-                'attribute'
-            )
+            $this->loader->supports('class', 'attribute')
         );
         $this->assertFalse(
-            $this->loader->supports(
-                'class',
-                'foo'
-            )
+            $this->loader->supports('class', 'foo')
         );
-    }
-
-    public function testGetResolverDoesNothing()
-    {
-        $this->assertTrue(empty($this->loader->getResolver()));
-    }
-
-    public function testSetResolverDoesNothing()
-    {
-        $lri = $this->createMock(LoaderResolverInterface::class);
-        $this->assertTrue(empty($this->loader->setResolver($lri)));
     }
 }

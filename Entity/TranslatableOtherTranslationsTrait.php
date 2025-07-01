@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @package  SOW\TranslationBundle\Entity
- * @author   Openium <contact@openium.fr>
- * @license  Openium All right reserved
- * @link     https://www.openium.fr/
- */
-
 namespace SOW\TranslationBundle\Entity;
 
 /**
@@ -16,13 +9,16 @@ namespace SOW\TranslationBundle\Entity;
  */
 trait TranslatableOtherTranslationsTrait
 {
+    /**
+     * @var array<string, string>
+     */
     protected array $otherTranslations = [];
 
     /**
      * getOtherTranslations
      * return list of translation how not match with collection
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getOtherTranslations(): array
     {
