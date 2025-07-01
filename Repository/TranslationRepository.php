@@ -2,7 +2,6 @@
 
 namespace SOW\TranslationBundle\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -45,15 +44,9 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
             ->andWhere('t.entityId = :entityId')
             ->andWhere('t.lang IN (:langs)')
             ->orderBy('t.key', 'ASC')
-            ->setParameters(
-                new ArrayCollection(
-                    [
-                        "entityName" => $translatable->getEntityName(),
-                        "entityId" => $translatable->getId(),
-                        "langs" => $langs,
-                    ]
-                )
-            );
+            ->setParameter("entityName", $translatable->getEntityName())
+            ->setParameter("entityId", $translatable->getId())
+            ->setParameter("langs", $langs);
         return $qb->getQuery()->getResult();
     }
 
@@ -75,13 +68,9 @@ class TranslationRepository extends EntityRepository implements TranslationRepos
             ->andWhere('t.lang = :lang')
             ->andWhere('t.entityId IN (:ids)')
             ->orderBy('t.entityId', 'ASC')
-            ->setParameters(
-                new ArrayCollection([
-                    "entityName" => $entityName,
-                    "lang" => $lang,
-                    "ids" => $ids,
-                ])
-            );
+            ->setParameter("entityName", $entityName)
+            ->setParameter("lang", $lang)
+            ->setParameter("ids", $ids);
         return $qb->getQuery()->getResult();
     }
 }
